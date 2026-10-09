@@ -1,0 +1,79 @@
+---
+import Pagina from '../components/Pagina.astro';
+import { linkWhatsApp } from '../config';
+const scrivi = linkWhatsApp('Ciao Quentina! Vorrei commissionarti un pezzo. Ti racconto la mia idea:');
+
+const passi = [
+	{ titolo: 'Mi racconti la tua idea', testo: "Cosa ti serve, per chi è, colori, misure, una foto d'ispirazione se ce l'hai." },
+	{ titolo: 'Ne parliamo insieme', testo: 'Ti propongo forma, illustrazione, tempi e prezzo. Se ti va bene, si parte.' },
+	{ titolo: 'Lo realizzo a mano', testo: 'Modellatura, cotture e decorazione richiedono qualche settimana: ti aggiorno strada facendo.' },
+	{ titolo: 'Ritiro o spedizione', testo: 'Puoi ritirarlo in laboratorio a Garbatella oppure lo spedisco ben imballato.' },
+];
+---
+
+<Pagina
+	titolo="Commissioni"
+	intro="Un pezzo pensato per te: per la tua casa, un regalo, un matrimonio o un'occasione speciale."
+	descrizione="Ceramiche su commissione, modellate e illustrate a mano da SoyQuentina."
+>
+	<h2>Come funziona</h2>
+	<ol class="passi">
+		{
+			passi.map((p) => (
+				<li>
+					<h3>{p.titolo}</h3>
+					<p>{p.testo}</p>
+				</li>
+			))
+		}
+	</ol>
+	<div class="bottoni azioni">
+		<a class="bottone" href={scrivi} target="_blank" rel="noopener">Raccontami la tua idea</a>
+	</div>
+</Pagina>
+
+<style>
+	.passi {
+		list-style: none;
+		counter-reset: passo;
+		padding: 0;
+		margin: 24px 0 0;
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 24px;
+		max-width: none !important;
+	}
+	.passi li {
+		counter-increment: passo;
+		border-top: var(--linea);
+		padding-top: 18px;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		margin: 0 !important;
+	}
+	.passi li::before {
+		content: counter(passo);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		background: var(--rosa);
+		font-weight: 400;
+	}
+	.azioni {
+		margin-top: 40px;
+	}
+	@media (max-width: 900px) {
+		.passi {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+	@media (max-width: 520px) {
+		.passi {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

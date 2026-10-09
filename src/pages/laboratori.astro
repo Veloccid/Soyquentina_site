@@ -1,0 +1,70 @@
+---
+import Pagina from '../components/Pagina.astro';
+import { SITO, linkWhatsApp } from '../config';
+const prenota = linkWhatsApp('Ciao Quentina! Vorrei informazioni sui prossimi laboratori.');
+---
+
+<Pagina
+	titolo="Laboratori"
+	intro="Mani in pasta: impara a modellare e decorare la ceramica in un piccolo gruppo, nel mio homelab."
+	descrizione="Laboratori di ceramica a Garbatella, Roma, con SoyQuentina."
+	daCompletare
+>
+	<div class="info">
+		<div>
+			<h2>Come funzionano</h2>
+			<p>
+				Testo segnaposto: durata, numero di persone, cosa si fa (modellare, decorare, illustrare),
+				cosa ci si porta a casa e quando, perché i pezzi devono essere cotti.
+			</p>
+		</div>
+		<dl>
+			<div><dt>Dove</dt><dd>Homelab a {SITO.zona}</dd></div>
+			<div><dt>Durata</dt><dd>Da definire</dd></div>
+			<div><dt>Persone</dt><dd>Da definire</dd></div>
+			<div><dt>Prezzo</dt><dd>Da definire</dd></div>
+		</dl>
+	</div>
+
+	<h2>Prossime date</h2>
+	<p>Le date vengono annunciate su Instagram. Scrivimi per sapere quando c'è il prossimo laboratorio o per organizzarne uno privato.</p>
+	<div class="bottoni azioni">
+		<a class="bottone" href={prenota} target="_blank" rel="noopener">Chiedi info su WhatsApp</a>
+		<a class="bottone chiaro" href="/gift-card">Regala un laboratorio</a>
+	</div>
+</Pagina>
+
+<style>
+	.info {
+		display: grid;
+		grid-template-columns: 1.2fr 1fr;
+		gap: 48px;
+		align-items: start;
+		margin-bottom: 56px;
+	}
+	dl {
+		margin: 0;
+		border-top: var(--linea);
+	}
+	dl div {
+		display: grid;
+		grid-template-columns: 110px 1fr;
+		gap: 12px;
+		padding: 12px 0;
+		border-bottom: var(--linea);
+	}
+	dt {
+		font-weight: 400;
+	}
+	dd {
+		margin: 0;
+	}
+	.azioni {
+		margin-top: 24px;
+	}
+	@media (max-width: 760px) {
+		.info {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

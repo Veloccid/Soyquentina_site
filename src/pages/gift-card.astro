@@ -1,0 +1,79 @@
+---
+import Pagina from '../components/Pagina.astro';
+import Busto from '../components/Busto.astro';
+import { linkWhatsApp } from '../config';
+
+// Importi segnaposto: da confermare
+const importi = [30, 50, 100];
+---
+
+<Pagina
+	titolo="Gift card"
+	intro="Regala una ceramica o un laboratorio, e lascia scegliere a chi la riceve."
+	descrizione="Gift card SoyQuentina: per ceramiche fatte a mano e laboratori."
+	daCompletare
+>
+	<div class="carte">
+		{
+			importi.map((euro) => (
+				<div class="carta">
+					<Busto altezza={70} alt="" />
+					<p class="valore">{euro} €</p>
+					<a
+						class="bottone chiaro"
+						href={linkWhatsApp(`Ciao Quentina! Vorrei una gift card da ${euro} €.`)}
+						target="_blank"
+						rel="noopener"
+					>
+						Richiedila
+					</a>
+				</div>
+			))
+		}
+	</div>
+
+	<h2>Come si usa</h2>
+	<p>
+		Testo segnaposto: la gift card si può usare per le ceramiche in laboratorio e online o per un
+		laboratorio. Vale 12 mesi. Per ora si richiede su WhatsApp, presto si potrà acquistare
+		direttamente qui.
+	</p>
+</Pagina>
+
+<style>
+	.carte {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 24px;
+		margin-bottom: 56px;
+	}
+	.carta {
+		background: var(--rosa);
+		border-radius: 28px;
+		aspect-ratio: 1.6;
+		padding: 24px;
+		display: grid;
+		grid-template-columns: auto 1fr;
+		grid-template-rows: 1fr auto;
+		align-items: start;
+		gap: 12px;
+	}
+	.valore {
+		justify-self: end;
+		font-size: clamp(2rem, 4vw, 2.8rem);
+		font-weight: 400;
+		line-height: 1;
+	}
+	.carta .bottone {
+		grid-column: 1 / -1;
+		justify-self: start;
+		min-height: 40px;
+		padding: 0 20px;
+	}
+	@media (max-width: 760px) {
+		.carte {
+			grid-template-columns: 1fr;
+			max-width: 380px;
+		}
+	}
+</style>

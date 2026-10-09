@@ -1,0 +1,70 @@
+---
+// Struttura comune per le pagine di testo (laboratori, commissioni, chi sono, legali...)
+import Layout from '../layouts/Layout.astro';
+
+interface Props {
+	titolo: string;
+	descrizione?: string;
+	intro?: string;
+	daCompletare?: boolean; // mostra un avviso che il testo è provvisorio
+}
+const { titolo, descrizione, intro, daCompletare = false } = Astro.props;
+---
+
+<Layout titolo={titolo} descrizione={descrizione}>
+	<div class="contenitore pagina">
+		<header class="pagina-testa">
+			<h1>{titolo}</h1>
+			{intro && <p class="intro">{intro}</p>}
+			{daCompletare && <p class="provvisorio">Testo provvisorio, da completare prima della messa online.</p>}
+		</header>
+		<div class="pagina-corpo">
+			<slot />
+		</div>
+	</div>
+</Layout>
+
+<style>
+	.pagina {
+		padding-top: clamp(24px, 5vw, 64px);
+	}
+	.pagina-testa {
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+		padding-bottom: 36px;
+		border-bottom: var(--linea);
+	}
+	.intro {
+		font-size: 1.25rem;
+		max-width: 50ch;
+	}
+	.provvisorio {
+		align-self: flex-start;
+		background: var(--rosa);
+		border-radius: 999px;
+		padding: 4px 14px;
+		font-size: 0.9rem;
+	}
+	.pagina-corpo {
+		margin-top: 48px;
+	}
+	.pagina-corpo :global(h2) {
+		font-size: clamp(1.5rem, 3vw, 2rem);
+		margin: 48px 0 16px;
+	}
+	.pagina-corpo :global(h2:first-child) {
+		margin-top: 0;
+	}
+	.pagina-corpo :global(p),
+	.pagina-corpo :global(ul),
+	.pagina-corpo :global(ol) {
+		max-width: 64ch;
+	}
+	.pagina-corpo :global(p + p) {
+		margin-top: 14px;
+	}
+	.pagina-corpo :global(li + li) {
+		margin-top: 6px;
+	}
+</style>

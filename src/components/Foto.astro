@@ -1,0 +1,52 @@
+---
+// Foto del prodotto con cornice ad arco. Se la foto non c'è ancora, mostra un riquadro rosa.
+import Busto from './Busto.astro';
+
+interface Props {
+	src?: string;
+	alt: string;
+	grande?: boolean;
+}
+const { src, alt, grande = false } = Astro.props;
+---
+
+<div class:list={['foto', { grande }]}>
+	{
+		src ? (
+			<img src={src} alt={alt} loading="lazy" />
+		) : (
+			<div class="vuota" role="img" aria-label={`${alt}: foto in arrivo`}>
+				<Busto altezza={grande ? 120 : 64} alt="" />
+				<span>foto in arrivo</span>
+			</div>
+		)
+	}
+</div>
+
+<style>
+	.foto {
+		aspect-ratio: 4 / 5;
+		border-radius: 999px 999px 0 0;
+		overflow: hidden;
+		background: var(--rosa);
+	}
+	.foto img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+	.vuota {
+		height: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		gap: 12px;
+		padding-top: 12%;
+	}
+	.vuota span {
+		font-size: 0.9rem;
+		color: var(--nero-tenue);
+	}
+</style>

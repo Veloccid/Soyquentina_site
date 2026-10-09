@@ -1,0 +1,128 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SchedaProdotto from '../components/SchedaProdotto.astro';
+import AvvisoSelezione from '../components/AvvisoSelezione.astro';
+import { PRODOTTI, TIPI } from '../data/prodotti';
+import { linkWhatsApp } from '../config';
+
+const modellate = PRODOTTI.filter((p) => p.tipo === 'modellata');
+const illustrate = PRODOTTI.filter((p) => p.tipo === 'illustrata');
+const chiediIllustrate = linkWhatsApp(
+	'Ciao Quentina! Vorrei vedere le tue ceramiche illustrate. Quando posso passare in laboratorio?',
+);
+---
+
+<Layout titolo="Shop" descrizione="Una piccola selezione di ceramiche modellate e illustrate a mano da SoyQuentina.">
+	<section class="contenitore apertura">
+		<h1>Shop</h1>
+		<p class="sottotitolo">
+			Una piccola selezione delle mie ceramiche. Ogni pezzo è fatto a mano, quindi può essere
+			diverso dagli altri nelle forme e nei colori: è proprio questo il bello.
+		</p>
+		<nav class="salti" aria-label="Sezioni dello shop">
+			<a class="bottone chiaro" href="#modellate">{TIPI.modellata.titolo}</a>
+			<a class="bottone chiaro" href="#illustrate">{TIPI.illustrata.titolo}</a>
+		</nav>
+	</section>
+
+	<section id="modellate" class="contenitore sezione" aria-labelledby="titolo-modellate">
+		<div class="intestazione">
+			<h2 id="titolo-modellate">{TIPI.modellata.titolo}</h2>
+			<p class="testo-breve">{TIPI.modellata.spiegazione}</p>
+		</div>
+		{
+			modellate.length > 0 ? (
+				<div class="griglia">
+					{modellate.map((p) => <SchedaProdotto prodotto={p} />)}
+				</div>
+			) : (
+				<p class="vuoto">Al momento non ci sono ceramiche modellate a mano online.</p>
+			)
+		}
+	</section>
+
+	<section id="illustrate" class="contenitore sezione" aria-labelledby="titolo-illustrate">
+		<div class="intestazione">
+			<h2 id="titolo-illustrate">{TIPI.illustrata.titolo}</h2>
+			<p class="testo-breve">{TIPI.illustrata.spiegazione}</p>
+		</div>
+		{
+			illustrate.length > 0 ? (
+				<div class="griglia">
+					{illustrate.map((p) => <SchedaProdotto prodotto={p} />)}
+				</div>
+			) : (
+				<div class="vuoto">
+					<p>Le ceramiche illustrate arrivano presto anche online. Intanto puoi vederle dal vivo in laboratorio.</p>
+					<a class="bottone" href={chiediIllustrate} target="_blank" rel="noopener">
+						Chiedi su WhatsApp
+					</a>
+				</div>
+			)
+		}
+	</section>
+
+	<div class="contenitore sezione">
+		<AvvisoSelezione />
+	</div>
+</Layout>
+
+<style>
+	.apertura {
+		padding-top: clamp(24px, 5vw, 64px);
+		display: flex;
+		flex-direction: column;
+		gap: 20px;
+	}
+	.sottotitolo {
+		font-size: 1.2rem;
+		max-width: 52ch;
+	}
+	.salti {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		margin-top: 8px;
+	}
+	.sezione {
+		margin-top: clamp(64px, 9vw, 112px);
+		scroll-margin-top: 24px;
+	}
+	.intestazione {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 16px 48px;
+		align-items: end;
+		border-bottom: var(--linea);
+		padding-bottom: 24px;
+		margin-bottom: 36px;
+	}
+	.griglia {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 40px 24px;
+	}
+	.vuoto {
+		background: var(--rosa);
+		border-radius: 24px;
+		padding: 32px;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 20px;
+	}
+	.vuoto p {
+		max-width: 52ch;
+	}
+	@media (max-width: 900px) {
+		.griglia {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (max-width: 680px) {
+		.intestazione {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

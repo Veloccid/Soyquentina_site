@@ -1,0 +1,32 @@
+---
+// Il logo (busto). Il file è un quadrato con margini: qui mostro solo il disegno.
+interface Props {
+	altezza?: number; // altezza in px del disegno visibile
+	alt?: string;
+	class?: string;
+}
+const { altezza = 40, alt = 'SoyQuentina', class: classe = '' } = Astro.props;
+const w = Math.round(altezza / 0.85);
+---
+
+<span class:list={['busto', classe]} style={`--w:${w}px`}>
+	<img src="/brand/logo.png" alt={alt} width="540" height="540" />
+</span>
+
+<style>
+	.busto {
+		display: inline-block;
+		width: calc(var(--w) * 0.58);
+		height: calc(var(--w) * 0.85);
+		overflow: hidden;
+		flex: none;
+	}
+	.busto img {
+		display: block;
+		width: var(--w);
+		height: var(--w);
+		max-width: none;
+		margin-left: calc(var(--w) * -0.21);
+		margin-top: calc(var(--w) * -0.07);
+	}
+</style>

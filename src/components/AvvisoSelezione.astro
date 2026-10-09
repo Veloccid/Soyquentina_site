@@ -1,0 +1,49 @@
+---
+// Avviso: online c'è solo una piccola selezione, il resto si vede in laboratorio.
+import { SITO, linkWhatsApp } from '../config';
+
+interface Props {
+	compatto?: boolean;
+}
+const { compatto = false } = Astro.props;
+const link = linkWhatsApp(
+	'Ciao Quentina! Vorrei passare in laboratorio a vedere le ceramiche. Quando posso venire?',
+);
+---
+
+<aside class:list={['avviso', { compatto }]}>
+	<div class="testo">
+		<h2>Qui trovi solo una piccola selezione</h2>
+		<p>
+			Molte più ceramiche ti aspettano nel mio laboratorio a {SITO.zona}: puoi venire a vederle su
+			appuntamento. Presto ci sarà anche un negozio.
+		</p>
+	</div>
+	<a class="bottone" href={link} target="_blank" rel="noopener">Prenota una visita su WhatsApp</a>
+</aside>
+
+<style>
+	.avviso {
+		background: var(--rosa);
+		border-radius: 32px;
+		padding: clamp(28px, 5vw, 56px);
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 28px 48px;
+		flex-wrap: wrap;
+	}
+	.testo {
+		max-width: 56ch;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.compatto {
+		border-radius: 24px;
+		padding: 24px 28px;
+	}
+	.compatto h2 {
+		font-size: 1.35rem;
+	}
+</style>

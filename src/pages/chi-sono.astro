@@ -1,0 +1,58 @@
+---
+import Pagina from '../components/Pagina.astro';
+import Foto from '../components/Foto.astro';
+import { SITO, linkWhatsApp } from '../config';
+---
+
+<Pagina
+	titolo="Chi sono"
+	intro="Perlopiù illustro sulla ceramica. E poi modello, cuocio, sbaglio e riprovo."
+	descrizione="SoyQuentina: ceramiche modellate e illustrate a mano in un homelab a Garbatella, Roma."
+	daCompletare
+>
+	<div class="chi">
+		<div class="ritratto">
+			<Foto alt="Quentina nel suo laboratorio" grande />
+		</div>
+		<div class="racconto">
+			<h2>SoyQuentina</h2>
+			<p>
+				Testo segnaposto: qui Quentina racconta chi è, come ha iniziato con la ceramica e cosa
+				la ispira. Due o tre paragrafi brevi, in prima persona, come parla su Instagram.
+			</p>
+			<p>
+				Il laboratorio è un homelab a {SITO.zona}: un piccolo spazio dove nascono tutti i pezzi
+				e dove puoi venire a trovarmi su appuntamento.
+			</p>
+			<div class="bottoni">
+				<a class="bottone" href={linkWhatsApp('Ciao Quentina! Vorrei passare a trovarti in laboratorio.')} target="_blank" rel="noopener">Vieni a trovarmi</a>
+				<a class="bottone chiaro" href={SITO.instagram} target="_blank" rel="noopener">Seguimi su Instagram</a>
+			</div>
+		</div>
+	</div>
+</Pagina>
+
+<style>
+	.chi {
+		display: grid;
+		grid-template-columns: 1fr 1.2fr;
+		gap: clamp(32px, 6vw, 80px);
+		align-items: center;
+	}
+	.racconto {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+	}
+	.racconto .bottoni {
+		margin-top: 12px;
+	}
+	@media (max-width: 760px) {
+		.chi {
+			grid-template-columns: 1fr;
+		}
+		.ritratto {
+			max-width: 380px;
+		}
+	}
+</style>

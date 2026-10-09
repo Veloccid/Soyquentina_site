@@ -1,0 +1,33 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Busto from '../components/Busto.astro';
+---
+
+<Layout titolo="Pagina non trovata">
+	<section class="contenitore non-trovata">
+		<Busto altezza={140} alt="" />
+		<h1>Questa pagina non esiste</h1>
+		<p>Forse il link è sbagliato o il pezzo non è più online.</p>
+		<div class="bottoni">
+			<a class="bottone" href="/shop">Vai allo shop</a>
+			<a class="bottone chiaro" href="/">Torna alla home</a>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.non-trovata {
+		padding-top: 64px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 20px;
+	}
+	h1 {
+		font-size: clamp(2rem, 5vw, 3rem);
+	}
+	.bottoni {
+		justify-content: center;
+	}
+</style>
