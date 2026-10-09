@@ -1,15 +1,264 @@
 ---
+import '@fontsource/patrick-hand';
 ---
 
 <html lang="it">
 	<head>
 		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 		<title>SoyQuentina</title>
+		<meta name="description" content="SoyQuentina — torna a trovarci presto!" />
+		<meta name="robots" content="noindex" />
 	</head>
 	<body>
-		<h1>SoyQuentina — il sito funziona ✔</h1>
-		<p>Pagina di prova. Da qui costruiamo home, catalogo e schede prodotto.</p>
+		<!-- smalto blu che cola dal bordo in alto (disegnato dallo script) -->
+		<svg class="smalto" aria-hidden="true">
+			<defs>
+				<filter id="goo">
+					<feGaussianBlur in="SourceGraphic" stdDeviation="7" result="blur" />
+					<feColorMatrix in="blur" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" result="goo" />
+					<feComposite in="SourceGraphic" in2="goo" operator="atop" />
+				</filter>
+			</defs>
+			<g filter="url(#goo)" id="colate"></g>
+		</svg>
+
+		<main>
+			<!-- Logo 2: il file è quadrato con molto bianco, qui mostro solo la parte centrale -->
+			<div class="logo">
+				<img src="/brand/logo-2.svg" alt="SoyQuentina" width="810" height="810" />
+			</div>
+
+			<div class="forno">
+				<svg class="calore" viewBox="0 0 120 70" aria-hidden="true">
+					<path d="M30 68 C 20 55, 40 45, 30 32 S 40 10, 30 2" />
+					<path d="M60 68 C 50 55, 70 45, 60 32 S 70 10, 60 2" />
+					<path d="M90 68 C 80 55, 100 45, 90 32 S 100 10, 90 2" />
+				</svg>
+				<img class="vaso" src="/brand/grafiche-giusi.svg" alt="" width="130" height="130" />
+			</div>
+
+			<div class="barra" role="progressbar" aria-label="Cottura in corso"><span></span></div>
+			<p class="cottura">cottura in corso<span class="puntini"><i>.</i><i>.</i><i>.</i></span></p>
+
+			<p class="presto" aria-label="Torna a trovarci presto">
+				{'Torna a trovarci presto'.split('').map((c, i) => (
+					<span style={`--i:${i}`}>{c === ' ' ? ' ' : c}</span>
+				))}
+			</p>
+		</main>
+
+		<script>
+			const NS = 'http://www.w3.org/2000/svg';
+			const svg = document.querySelector('.smalto') as SVGSVGElement;
+			const g = document.getElementById('colate') as unknown as SVGGElement;
+
+			function disegna() {
+				const W = window.innerWidth;
+				svg.setAttribute('viewBox', `0 0 ${W} 220`);
+				g.innerHTML = '';
+
+				// bordo di smalto in alto
+				const bordo = document.createElementNS(NS, 'rect');
+				bordo.setAttribute('x', '-20');
+				bordo.setAttribute('y', '-20');
+				bordo.setAttribute('width', String(W + 40));
+				bordo.setAttribute('height', '34');
+				g.appendChild(bordo);
+
+				// gocce: si allungano dal bordo, si staccano e cadono
+				const passo = W < 600 ? 46 : 70;
+				for (let x = 20 + Math.random() * 20; x < W - 10; x += passo * (0.7 + Math.random() * 0.6)) {
+					// rigonfiamento fisso sul bordo
+					const gobba = document.createElementNS(NS, 'circle');
+					gobba.setAttribute('cx', String(x));
+					gobba.setAttribute('cy', '14');
+					gobba.setAttribute('r', String(10 + Math.random() * 10));
+					g.appendChild(gobba);
+
+					// goccia che cade
+					const goccia = document.createElementNS(NS, 'circle');
+					goccia.setAttribute('cx', String(x));
+					goccia.setAttribute('cy', '14');
+					goccia.setAttribute('r', String(7 + Math.random() * 6));
+					goccia.classList.add('goccia');
+					goccia.style.setProperty('--dur', `${4 + Math.random() * 5}s`);
+					goccia.style.setProperty('--rit', `${-Math.random() * 9}s`);
+					goccia.style.setProperty('--fine', `${110 + Math.random() * 90}px`);
+					g.appendChild(goccia);
+				}
+			}
+
+			disegna();
+			let timer: number;
+			window.addEventListener('resize', () => {
+				clearTimeout(timer);
+				timer = window.setTimeout(disegna, 200);
+			});
+		</script>
+
+		<style is:global>
+			:root {
+				--nero: #000000;
+				--bianco: #ffffff;
+				--blu: #006ccf;
+			}
+			* { box-sizing: border-box; }
+			html, body { margin: 0; height: 100%; }
+			body {
+				background: var(--bianco);
+				color: var(--nero);
+				font-family: 'Patrick Hand', system-ui, sans-serif;
+				text-align: center;
+				overflow-x: hidden;
+			}
+
+			/* smalto che cola */
+			.smalto {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 220px;
+				pointer-events: none;
+				z-index: 0;
+			}
+			.smalto g { fill: var(--blu); }
+			.goccia {
+				transform-box: fill-box;
+				transform-origin: center;
+				animation: cola var(--dur) cubic-bezier(0.55, 0, 0.9, 0.6) var(--rit) infinite;
+			}
+			@keyframes cola {
+				0% { transform: translateY(0) scale(0.6); opacity: 1; }
+				45% { transform: translateY(18px) scale(1); opacity: 1; }
+				85% { transform: translateY(var(--fine)) scale(0.8); opacity: 1; }
+				100% { transform: translateY(calc(var(--fine) + 20px)) scale(0.3); opacity: 0; }
+			}
+
+			main {
+				position: relative;
+				z-index: 1;
+				min-height: 100%;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				padding: 190px 16px 40px;
+			}
+
+			/* ritaglio del Logo 2 (il disegno occupa la fascia centrale del file) */
+			.logo {
+				--w: 250px;
+				width: calc(var(--w) * 0.9);
+				height: calc(var(--w) * 0.39);
+				overflow: hidden;
+				animation: entra 1s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+			}
+			.logo img {
+				display: block;
+				width: var(--w);
+				height: var(--w);
+				margin-left: calc(var(--w) * -0.075);
+				margin-top: calc(var(--w) * -0.29);
+			}
+
+			.forno { position: relative; margin-top: 70px; }
+			.vaso {
+				display: block;
+				width: 130px;
+				height: auto;
+				transform-origin: 50% 90%;
+				animation: dondola 2.4s ease-in-out infinite;
+			}
+			.calore {
+				position: absolute;
+				left: 50%;
+				bottom: 92%;
+				width: 80px;
+				transform: translateX(-50%);
+				overflow: visible;
+			}
+			.calore path {
+				fill: none;
+				stroke: var(--nero);
+				stroke-width: 3;
+				stroke-linecap: round;
+				stroke-dasharray: 90;
+				stroke-dashoffset: 90;
+				animation: sale 2.2s ease-in-out infinite;
+			}
+			.calore path:nth-child(2) { animation-delay: 0.5s; }
+			.calore path:nth-child(3) { animation-delay: 1s; }
+
+			.barra {
+				width: min(240px, 66vw);
+				height: 14px;
+				margin-top: 18px;
+				border: 2px solid var(--nero);
+				border-radius: 999px;
+				overflow: hidden;
+				background: var(--bianco);
+			}
+			.barra span {
+				display: block;
+				height: 100%;
+				background: var(--blu);
+				border-radius: 999px;
+				animation: cuoce 5s ease-in-out infinite;
+			}
+			.cottura { margin: 8px 0 0; font-size: 1.25rem; }
+			.puntini i { font-style: normal; animation: puntino 1.4s infinite; }
+			.puntini i:nth-child(2) { animation-delay: 0.2s; }
+			.puntini i:nth-child(3) { animation-delay: 0.4s; }
+
+			.presto {
+				margin: 28px 0 0;
+				font-size: clamp(1.6rem, 6vw, 2.2rem);
+				color: var(--blu);
+			}
+			.presto span {
+				display: inline-block;
+				animation: onda 2.6s ease-in-out infinite;
+				animation-delay: calc(var(--i) * 0.07s);
+			}
+
+			@keyframes entra {
+				from { opacity: 0; transform: translateY(-12px); }
+				to { opacity: 1; transform: translateY(0); }
+			}
+			@keyframes dondola {
+				0%, 100% { transform: rotate(-5deg); }
+				50% { transform: rotate(5deg); }
+			}
+			@keyframes sale {
+				0% { stroke-dashoffset: 90; opacity: 0; transform: translateY(8px); }
+				30% { opacity: 1; }
+				100% { stroke-dashoffset: -90; opacity: 0; transform: translateY(-10px); }
+			}
+			@keyframes cuoce {
+				0% { width: 6%; }
+				85%, 100% { width: 100%; }
+			}
+			@keyframes puntino {
+				0%, 60%, 100% { opacity: 0.15; }
+				30% { opacity: 1; }
+			}
+			@keyframes onda {
+				0%, 40%, 100% { transform: translateY(0); }
+				20% { transform: translateY(-7px); }
+			}
+
+			@media (max-width: 600px) {
+				.logo { --w: 210px; }
+				main { padding-top: 170px; }
+			}
+			@media (prefers-reduced-motion: reduce) {
+				*, *::before, *::after { animation: none !important; }
+				.barra span { width: 60%; }
+				.calore { display: none; }
+			}
+		</style>
 	</body>
 </html>
