@@ -1,8 +1,15 @@
 ---
-import Pagina from '../components/Pagina.astro';
+import Pagina from '../../components/Pagina.astro';
+import { percorsiTemi } from '../../temi';
+
+export function getStaticPaths() {
+	return percorsiTemi();
+}
+const { tema } = Astro.params as { tema: string };
+
 ---
 
-<Pagina titolo="Privacy e cookie" descrizione="Informativa privacy e cookie di SoyQuentina." daCompletare>
+<Pagina tema={tema} titolo="Privacy e cookie" descrizione="Informativa privacy e cookie di SoyQuentina." daCompletare>
 	<h2>Titolare del trattamento</h2>
 	<p>[Nome e cognome o ragione sociale], [indirizzo], [email].</p>
 

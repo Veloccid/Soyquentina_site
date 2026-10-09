@@ -1,0 +1,248 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Busto from '../../components/Busto.astro';
+import SchedaProdotto from '../../components/SchedaProdotto.astro';
+import { PRODOTTI, TIPI } from '../../data/prodotti';
+import { SITO, linkWhatsApp } from '../../config';
+import { link } from '../../temi';
+
+const tema = 'rosa';
+const inEvidenza = PRODOTTI.filter((p) => p.disponibile).slice(0, 3);
+const visita = linkWhatsApp(
+	'Ciao Quentina! Vorrei passare in laboratorio a vedere le ceramiche. Quando posso venire?',
+);
+---
+
+<Layout tema={tema}>
+	<section class="apertura">
+		<h1 class="gigante">
+			Ceramiche<br />fatte a mano
+		</h1>
+		<div class="apertura-sotto contenitore">
+			<div class="cerchio" aria-hidden="true"><Busto altezza={150} alt="" /></div>
+			<div class="apertura-testo">
+				<p>
+					Modellate o illustrate, una per una, nel mio homelab a {SITO.zona}. Qui ne trovi una
+					piccola selezione.
+				</p>
+				<div class="bottoni">
+					<a class="bottone" href={link(tema, '/shop')}>Vai allo shop</a>
+					<a class="bottone chiaro" href={visita} target="_blank" rel="noopener">Prenota una visita</a>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section class="fascia" aria-labelledby="titolo-fascia">
+		<div class="contenitore fascia-dentro">
+			<h2 id="titolo-fascia">Online solo una piccola selezione.<br />Il resto ti aspetta in laboratorio.</h2>
+			<div class="fascia-azione">
+				<p>Vieni a vedere tutte le ceramiche su appuntamento. Presto anche in negozio.</p>
+				<a class="bottone bianco" href={visita} target="_blank" rel="noopener">Prenota su WhatsApp</a>
+			</div>
+		</div>
+	</section>
+
+	<section class="contenitore blocco" aria-labelledby="titolo-anime">
+		<h2 id="titolo-anime" class="grande">Due modi</h2>
+		<div class="anime">
+			<a href={link(tema, '/shop#modellate')}>
+				<span class="numero" aria-hidden="true">A</span>
+				<h3>{TIPI.modellata.titolo}</h3>
+				<p>{TIPI.modellata.spiegazione}</p>
+			</a>
+			<a href={link(tema, '/shop#illustrate')}>
+				<span class="numero" aria-hidden="true">B</span>
+				<h3>{TIPI.illustrata.titolo}</h3>
+				<p>{TIPI.illustrata.spiegazione}</p>
+			</a>
+		</div>
+	</section>
+
+	<section class="contenitore blocco" aria-labelledby="titolo-evidenza">
+		<div class="intestazione">
+			<h2 id="titolo-evidenza" class="grande">In negozio online</h2>
+			<a class="bottone chiaro" href={link(tema, '/shop')}>Tutto lo shop</a>
+		</div>
+		<div class="griglia">
+			{inEvidenza.map((p) => <SchedaProdotto prodotto={p} tema={tema} />)}
+		</div>
+	</section>
+
+	<section class="contenitore blocco altro" aria-label="Altro">
+		<a href={link(tema, '/laboratori')}>Laboratori</a>
+		<a href={link(tema, '/commissioni')}>Commissioni</a>
+		<a href={link(tema, '/gift-card')}>Gift card</a>
+	</section>
+</Layout>
+
+<style>
+	.apertura {
+		padding-top: clamp(16px, 3vw, 40px);
+	}
+	.gigante {
+		font-size: clamp(3.4rem, 15.5vw, 15rem);
+		line-height: 0.86;
+		letter-spacing: -0.055em;
+		padding: 0 clamp(12px, 2.5vw, 32px);
+	}
+	.apertura-sotto {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: clamp(24px, 5vw, 64px);
+		align-items: center;
+		margin-top: clamp(28px, 4vw, 48px);
+	}
+	.cerchio {
+		width: clamp(160px, 22vw, 260px);
+		aspect-ratio: 1;
+		border-radius: 50%;
+		background: var(--bianco);
+		border: var(--linea);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		animation: dondola 5s ease-in-out infinite;
+	}
+	@keyframes dondola {
+		0%,
+		100% {
+			transform: rotate(-4deg);
+		}
+		50% {
+			transform: rotate(4deg);
+		}
+	}
+	.apertura-testo {
+		display: flex;
+		flex-direction: column;
+		gap: 22px;
+		font-size: 1.25rem;
+		max-width: 44ch;
+	}
+
+	.fascia {
+		margin-top: clamp(64px, 9vw, 112px);
+		background: var(--nero);
+		color: var(--bianco);
+		padding: clamp(48px, 7vw, 88px) 0;
+	}
+	.fascia-dentro {
+		display: grid;
+		grid-template-columns: 1.5fr 1fr;
+		gap: 32px 64px;
+		align-items: end;
+	}
+	.fascia h2 {
+		font-size: clamp(2rem, 4.4vw, 3.6rem);
+	}
+	.fascia-azione {
+		display: flex;
+		flex-direction: column;
+		gap: 18px;
+		align-items: flex-start;
+	}
+	.bottone.bianco {
+		background: var(--rosa);
+		color: var(--nero);
+		border-color: var(--rosa);
+	}
+	.bottone.bianco:hover {
+		background: var(--bianco);
+	}
+
+	.blocco {
+		margin-top: clamp(72px, 10vw, 128px);
+	}
+	.grande {
+		font-size: clamp(2.6rem, 7vw, 5.5rem);
+		letter-spacing: -0.04em;
+	}
+	.anime {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0;
+		margin-top: 32px;
+		border: var(--linea);
+		border-radius: var(--raggio);
+		overflow: hidden;
+		background: var(--bianco);
+	}
+	.anime a {
+		padding: clamp(28px, 4vw, 48px);
+		text-decoration: none;
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		transition: background 0.25s, color 0.25s;
+	}
+	.anime a + a {
+		border-left: var(--linea);
+	}
+	.anime a:hover {
+		background: var(--nero);
+		color: var(--bianco);
+	}
+	.numero {
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		border: 1.5px solid currentColor;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		font-weight: 400;
+	}
+	.anime h3 {
+		font-size: clamp(1.8rem, 3.4vw, 2.6rem);
+	}
+
+	.intestazione {
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-end;
+		gap: 16px;
+		flex-wrap: wrap;
+		margin-bottom: 36px;
+	}
+	.griglia {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 32px 28px;
+	}
+
+	.altro {
+		display: flex;
+		flex-direction: column;
+		border-top: var(--linea);
+	}
+	.altro a {
+		font-size: clamp(2.4rem, 8vw, 6rem);
+		font-weight: 400;
+		letter-spacing: -0.04em;
+		line-height: 1.1;
+		text-decoration: none;
+		border-bottom: var(--linea);
+		padding: 10px 0;
+		transition: padding 0.3s, background 0.3s;
+	}
+	.altro a:hover {
+		background: var(--bianco);
+		padding-left: 24px;
+	}
+
+	@media (max-width: 760px) {
+		.apertura-sotto,
+		.fascia-dentro,
+		.anime {
+			grid-template-columns: 1fr;
+		}
+		.anime a + a {
+			border-left: 0;
+			border-top: var(--linea);
+		}
+		.griglia {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+</style>

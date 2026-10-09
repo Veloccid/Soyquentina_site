@@ -1,0 +1,155 @@
+---
+// Una mensola della vetrina con i pezzi appoggiati sopra. Cliccando un pezzo si apre il pannello di dettaglio.
+import Sagoma from './Sagoma.astro';
+import { type Prodotto, TIPI, prezzoFormattato } from '../../data/prodotti';
+import { linkWhatsApp } from '../../config';
+import { link } from '../../temi';
+
+interface Props {
+	prodotti: Prodotto[];
+	partenza?: number; // per variare le sagome tra una mensola e l'altra
+}
+const { prodotti, partenza = 0 } = Astro.props;
+const altezze = [190, 150, 120, 205, 165, 135];
+---
+
+<div class="mensola">
+	<ul class="pezzi">
+		{
+			prodotti.map((p, i) => {
+				const n = partenza + i;
+				return (
+					<li style={`--h:${altezze[n % altezze.length]}px; --ritardo:${i * 80}ms`}>
+						<button
+							type="button"
+							class="pezzo"
+							data-pezzo
+							data-nome={p.nome}
+							data-prezzo={prezzoFormattato(p.prezzo)}
+							data-tipo={TIPI[p.tipo].etichetta}
+							data-descrizione={p.descrizione}
+							data-misure={p.dimensioni}
+							data-link={link('vetrina', `/prodotti/${p.slug}`)}
+							data-whatsapp={linkWhatsApp(`Ciao Quentina! Mi interessa "${p.nome}". È ancora disponibile?`)}
+							data-unico={p.pezzoUnico ? '1' : '0'}
+							aria-label={`${p.nome}, ${prezzoFormattato(p.prezzo)}. Apri il dettaglio`}
+						>
+							<span class="figura">
+								<Sagoma indice={n} foto={p.foto[0]} alt={p.nome} />
+							</span>
+							<span class="cartellino" aria-hidden="true">
+								<span>{p.nome}</span>
+								<strong>{prezzoFormattato(p.prezzo)}</strong>
+							</span>
+						</button>
+					</li>
+				);
+			})
+		}
+	</ul>
+	<div class="asse" aria-hidden="true"></div>
+</div>
+
+<style>
+	.mensola {
+		position: relative;
+		padding: 0 clamp(8px, 2vw, 24px);
+	}
+	.pezzi {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-around;
+		gap: clamp(8px, 2vw, 28px);
+		min-height: 230px;
+	}
+	.pezzi li {
+		flex: 1 1 0;
+		max-width: 170px;
+		display: flex;
+		justify-content: center;
+	}
+	.pezzo {
+		all: unset;
+		position: relative;
+		cursor: pointer;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+	}
+	.figura {
+		display: block;
+		width: 100%;
+		height: var(--h);
+		max-height: 30vw;
+		transform-origin: 50% 100%;
+		transition: transform 0.35s cubic-bezier(0.2, 1.4, 0.4, 1), filter 0.35s ease;
+		filter: drop-shadow(0 6px 0 rgba(0, 0, 0, 0.08));
+	}
+	.pezzo:hover .figura,
+	.pezzo:focus-visible .figura {
+		transform: translateY(-10px) rotate(-2deg);
+		filter: drop-shadow(0 18px 10px rgba(0, 0, 0, 0.15));
+	}
+	.pezzo:focus-visible {
+		outline: 2px solid var(--nero);
+		outline-offset: 8px;
+		border-radius: 12px;
+	}
+	/* cartellino del prezzo, appeso sotto la mensola */
+	.cartellino {
+		position: absolute;
+		top: calc(100% + 18px);
+		left: 50%;
+		transform: translateX(-50%) rotate(-3deg);
+		transform-origin: 50% -14px;
+		background: var(--bianco);
+		border: var(--linea);
+		border-radius: 8px;
+		padding: 6px 10px;
+		font-size: 0.82rem;
+		line-height: 1.25;
+		text-align: center;
+		white-space: nowrap;
+		display: flex;
+		flex-direction: column;
+		z-index: 2;
+		transition: transform 0.4s cubic-bezier(0.3, 1.6, 0.5, 1);
+	}
+	.cartellino::before {
+		content: '';
+		position: absolute;
+		left: 50%;
+		bottom: 100%;
+		width: 1.5px;
+		height: 16px;
+		background: var(--nero);
+	}
+	.cartellino strong {
+		font-weight: 400;
+	}
+	.pezzo:hover .cartellino {
+		transform: translateX(-50%) rotate(4deg);
+	}
+	.asse {
+		height: 10px;
+		background: var(--nero);
+		border-radius: 3px;
+		margin: 0 calc(clamp(8px, 2vw, 24px) * -1);
+	}
+	@media (max-width: 760px) {
+		.pezzi {
+			min-height: 0;
+		}
+		.cartellino {
+			font-size: 0.72rem;
+			padding: 4px 6px;
+		}
+		.figura {
+			max-height: 120px;
+		}
+	}
+</style>

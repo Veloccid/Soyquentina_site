@@ -1,0 +1,290 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Busto from '../../components/Busto.astro';
+import SchedaProdotto from '../../components/SchedaProdotto.astro';
+import AvvisoSelezione from '../../components/AvvisoSelezione.astro';
+import { PRODOTTI, TIPI } from '../../data/prodotti';
+import { SITO, linkWhatsApp } from '../../config';
+import { link } from '../../temi';
+
+const tema = 'morbida';
+const inEvidenza = PRODOTTI.filter((p) => p.disponibile).slice(0, 4);
+const visita = linkWhatsApp(
+	'Ciao Quentina! Vorrei passare in laboratorio a vedere le ceramiche. Quando posso venire?',
+);
+---
+
+<Layout tema={tema}>
+	<section class="contenitore apertura">
+		<div class="apertura-testo">
+			<h1>Ceramiche fatte a mano, una alla volta</h1>
+			<p class="sottotitolo">
+				Modello, illustro, cuocio e ricomincio, nel mio homelab a {SITO.zona}. Online trovi una
+				piccola selezione: il resto vieni a scoprirlo dal vivo.
+			</p>
+			<div class="bottoni">
+				<a class="bottone" href={link(tema, '/shop')}>Vai allo shop</a>
+				<a class="bottone chiaro" href={visita} target="_blank" rel="noopener">Prenota una visita</a>
+			</div>
+		</div>
+
+		<div class="apertura-figura" aria-hidden="true">
+			<div class="macchia">
+				<Busto altezza={230} alt="" />
+			</div>
+			<span class="nuvoletta">ciao, sono Quentina!</span>
+			<span class="adesivo a1">pezzi unici</span>
+			<span class="adesivo a2">fatto a mano</span>
+			<span class="adesivo a3">Garbatella</span>
+		</div>
+	</section>
+
+	<section class="contenitore blocco" aria-labelledby="titolo-anime">
+		<h2 id="titolo-anime">Due modi di fare ceramica</h2>
+		<div class="anime">
+			<a class="anima" href={link(tema, '/shop#modellate')}>
+				<span class="adesivo-anima">dall'argilla</span>
+				<h3>{TIPI.modellata.titolo}</h3>
+				<p>{TIPI.modellata.spiegazione}</p>
+			</a>
+			<a class="anima" href={link(tema, '/shop#illustrate')}>
+				<span class="adesivo-anima">col pennello</span>
+				<h3>{TIPI.illustrata.titolo}</h3>
+				<p>{TIPI.illustrata.spiegazione}</p>
+			</a>
+		</div>
+	</section>
+
+	<section class="contenitore blocco" aria-labelledby="titolo-evidenza">
+		<div class="intestazione">
+			<h2 id="titolo-evidenza">Appena sfornati</h2>
+			<a href={link(tema, '/shop')}>Tutto lo shop</a>
+		</div>
+		<div class="griglia">
+			{inEvidenza.map((p) => <SchedaProdotto prodotto={p} tema={tema} />)}
+		</div>
+	</section>
+
+	<div class="contenitore blocco">
+		<AvvisoSelezione />
+	</div>
+
+	<section class="contenitore blocco altro" aria-labelledby="titolo-altro">
+		<h2 id="titolo-altro">E poi…</h2>
+		<div class="pillole">
+			<a href={link(tema, '/laboratori')}>Laboratori</a>
+			<a href={link(tema, '/commissioni')}>Commissioni</a>
+			<a href={link(tema, '/gift-card')}>Gift card</a>
+			<a href={link(tema, '/chi-sono')}>Chi sono</a>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.apertura {
+		display: grid;
+		grid-template-columns: 1.1fr 1fr;
+		gap: clamp(32px, 6vw, 80px);
+		align-items: center;
+		padding-top: clamp(24px, 5vw, 64px);
+	}
+	.apertura-testo {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
+	.apertura h1 {
+		font-size: clamp(2.6rem, 6.4vw, 5rem);
+	}
+	.sottotitolo {
+		font-size: 1.2rem;
+		max-width: 42ch;
+	}
+	.apertura-figura {
+		position: relative;
+		aspect-ratio: 1;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.macchia {
+		width: 86%;
+		aspect-ratio: 1;
+		background: var(--rosa);
+		border: var(--linea);
+		border-radius: 58% 42% 52% 48% / 46% 56% 44% 54%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		animation: morbida 9s ease-in-out infinite;
+	}
+	@keyframes morbida {
+		0%,
+		100% {
+			border-radius: 58% 42% 52% 48% / 46% 56% 44% 54%;
+		}
+		50% {
+			border-radius: 44% 56% 40% 60% / 58% 42% 58% 42%;
+		}
+	}
+	.nuvoletta {
+		position: absolute;
+		top: 4%;
+		right: 0;
+		background: var(--bianco);
+		border: var(--linea);
+		border-radius: 22px 22px 22px 4px;
+		padding: 10px 16px;
+		font-weight: 400;
+		transform: rotate(4deg);
+		animation: salta 3s ease-in-out infinite;
+	}
+	.adesivo {
+		position: absolute;
+		background: var(--bianco);
+		border: var(--linea);
+		border-radius: 999px;
+		padding: 6px 14px;
+		font-size: 0.92rem;
+		font-weight: 400;
+		white-space: nowrap;
+		animation: salta 3.4s ease-in-out infinite;
+	}
+	.a1 {
+		left: -2%;
+		top: 30%;
+		transform: rotate(-10deg);
+		background: var(--rosa);
+		animation-delay: 0.4s;
+	}
+	.a2 {
+		left: 6%;
+		bottom: 10%;
+		transform: rotate(7deg);
+		animation-delay: 0.9s;
+	}
+	.a3 {
+		right: 2%;
+		bottom: 20%;
+		transform: rotate(-6deg);
+		animation-delay: 1.4s;
+	}
+	@keyframes salta {
+		0%,
+		100% {
+			translate: 0 0;
+		}
+		50% {
+			translate: 0 -8px;
+		}
+	}
+
+	.blocco {
+		margin-top: clamp(72px, 10vw, 128px);
+	}
+	.anime {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 28px;
+		margin-top: 36px;
+	}
+	.anima {
+		position: relative;
+		background: var(--rosa);
+		border: var(--linea);
+		border-radius: 48px;
+		padding: 48px 36px 36px;
+		text-decoration: none;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		box-shadow: 6px 6px 0 var(--nero);
+		transition: transform 0.25s, box-shadow 0.25s;
+	}
+	.anima + .anima {
+		background: var(--bianco);
+	}
+	.anima:hover {
+		transform: translate(-3px, -3px);
+		box-shadow: 9px 9px 0 var(--nero);
+	}
+	.anima h3 {
+		font-size: clamp(1.7rem, 3vw, 2.3rem);
+	}
+	.adesivo-anima {
+		position: absolute;
+		top: -16px;
+		right: 28px;
+		background: var(--nero);
+		color: var(--bianco);
+		border-radius: 999px;
+		padding: 4px 14px;
+		font-size: 0.9rem;
+		transform: rotate(6deg);
+	}
+
+	.intestazione {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		gap: 16px;
+		margin-bottom: 36px;
+	}
+	.intestazione a {
+		white-space: nowrap;
+		font-weight: 400;
+		text-underline-offset: 5px;
+	}
+	.griglia {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 48px 28px;
+	}
+	.griglia > :global(:nth-child(even)) {
+		transform: translateY(28px);
+	}
+
+	.pillole {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px;
+		margin-top: 28px;
+	}
+	.pillole a {
+		font-size: clamp(1.4rem, 3vw, 2.2rem);
+		font-weight: 400;
+		text-decoration: none;
+		border: var(--linea);
+		border-radius: 999px;
+		padding: 10px 28px;
+		box-shadow: 4px 4px 0 var(--nero);
+		transition: transform 0.25s cubic-bezier(0.3, 1.6, 0.5, 1), background 0.2s;
+	}
+	.pillole a:nth-child(odd) {
+		transform: rotate(-2deg);
+	}
+	.pillole a:nth-child(even) {
+		transform: rotate(2deg);
+		background: var(--rosa);
+	}
+	.pillole a:hover {
+		transform: rotate(0) scale(1.05);
+	}
+
+	@media (max-width: 900px) {
+		.griglia {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	}
+	@media (max-width: 760px) {
+		.apertura,
+		.anime {
+			grid-template-columns: 1fr;
+		}
+		.apertura-figura {
+			max-width: 380px;
+			width: 100%;
+			margin: 0 auto;
+		}
+	}
+</style>

@@ -1,0 +1,17 @@
+---
+import { percorsiTemi } from '../../temi';
+import Essenziale from '../../proposte/essenziale/Home.astro';
+import Wow from '../../proposte/wow/Home.astro';
+import Vetrina from '../../proposte/vetrina/Home.astro';
+import Rosa from '../../proposte/rosa/Home.astro';
+import Racconto from '../../proposte/racconto/Home.astro';
+import Morbida from '../../proposte/morbida/Home.astro';
+
+export function getStaticPaths() {
+	return percorsiTemi();
+}
+const { tema } = Astro.params;
+const Home = { essenziale: Essenziale, wow: Wow, vetrina: Vetrina, rosa: Rosa, racconto: Racconto, morbida: Morbida }[tema as string]!;
+---
+
+<Home />

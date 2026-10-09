@@ -1,0 +1,57 @@
+---
+// La parete rosa della vetrina: contiene le mensole. Una luce segue il mouse.
+interface Props {
+	etichetta?: string;
+}
+const { etichetta } = Astro.props;
+---
+
+<div class="parete" data-parete>
+	{etichetta && <p class="insegna">{etichetta}</p>}
+	<div class="mensole">
+		<slot />
+	</div>
+</div>
+
+<script is:inline>
+	(() => {
+		if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		document.querySelectorAll('[data-parete]').forEach((p) => {
+			p.addEventListener('pointermove', (e) => {
+				const r = p.getBoundingClientRect();
+				p.style.setProperty('--lx', `${e.clientX - r.left}px`);
+				p.style.setProperty('--ly', `${e.clientY - r.top}px`);
+			});
+		});
+	})();
+</script>
+
+<style>
+	.parete {
+		position: relative;
+		background:
+			radial-gradient(420px circle at var(--lx, 50%) var(--ly, 30%), rgba(255, 255, 255, 0.75), transparent 70%),
+			var(--rosa);
+		border-radius: 40px 40px 0 0;
+		padding: clamp(48px, 7vw, 88px) clamp(16px, 4vw, 56px) clamp(56px, 7vw, 80px);
+		overflow: hidden;
+	}
+	.insegna {
+		position: absolute;
+		top: 20px;
+		left: 50%;
+		transform: translateX(-50%);
+		background: var(--bianco);
+		border: var(--linea);
+		border-radius: 999px;
+		padding: 4px 16px;
+		font-size: 0.9rem;
+		font-weight: 400;
+		white-space: nowrap;
+	}
+	.mensole {
+		display: flex;
+		flex-direction: column;
+		gap: clamp(72px, 9vw, 110px);
+	}
+</style>

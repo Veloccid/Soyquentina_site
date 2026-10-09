@@ -1,0 +1,12 @@
+---
+import { percorsiTemi } from '../../temi';
+import ShopComune from '../../proposte/comuni/Shop.astro';
+import ShopVetrina from '../../proposte/vetrina/Shop.astro';
+
+export function getStaticPaths() {
+	return percorsiTemi();
+}
+const { tema } = Astro.params as { tema: string };
+---
+
+{tema === 'vetrina' ? <ShopVetrina /> : <ShopComune tema={tema} />}

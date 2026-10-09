@@ -1,9 +1,16 @@
 ---
-import Pagina from '../components/Pagina.astro';
-import { SITO } from '../config';
+import Pagina from '../../components/Pagina.astro';
+import { SITO } from '../../config';
+import { percorsiTemi } from '../../temi';
+
+export function getStaticPaths() {
+	return percorsiTemi();
+}
+const { tema } = Astro.params as { tema: string };
+
 ---
 
-<Pagina titolo="Termini di vendita" descrizione="Condizioni generali di vendita di SoyQuentina." daCompletare>
+<Pagina tema={tema} titolo="Termini di vendita" descrizione="Condizioni generali di vendita di SoyQuentina." daCompletare>
 	<h2>Chi vende</h2>
 	<p>
 		{SITO.ragioneSociale || '[Nome e cognome o ragione sociale]'}, {SITO.partitaIva ? `P.IVA ${SITO.partitaIva}` : '[P.IVA]'},

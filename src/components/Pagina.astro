@@ -3,15 +3,16 @@
 import Layout from '../layouts/Layout.astro';
 
 interface Props {
+	tema: string;
 	titolo: string;
 	descrizione?: string;
 	intro?: string;
 	daCompletare?: boolean; // mostra un avviso che il testo è provvisorio
 }
-const { titolo, descrizione, intro, daCompletare = false } = Astro.props;
+const { tema, titolo, descrizione, intro, daCompletare = false } = Astro.props;
 ---
 
-<Layout titolo={titolo} descrizione={descrizione}>
+<Layout tema={tema} titolo={titolo} descrizione={descrizione}>
 	<div class="contenitore pagina">
 		<header class="pagina-testa">
 			<h1>{titolo}</h1>
@@ -41,7 +42,7 @@ const { titolo, descrizione, intro, daCompletare = false } = Astro.props;
 	}
 	.provvisorio {
 		align-self: flex-start;
-		background: var(--rosa);
+		background: var(--superficie);
 		border-radius: 999px;
 		padding: 4px 14px;
 		font-size: 0.9rem;

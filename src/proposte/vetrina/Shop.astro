@@ -1,0 +1,144 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AvvisoSelezione from '../../components/AvvisoSelezione.astro';
+import Parete from './Parete.astro';
+import Mensola from './Mensola.astro';
+import Pannello from './Pannello.astro';
+import { PRODOTTI, TIPI } from '../../data/prodotti';
+import { linkWhatsApp } from '../../config';
+
+const tema = 'vetrina';
+const aMensole = <T,>(lista: T[], n = 3) =>
+	Array.from({ length: Math.ceil(lista.length / n) }, (_, i) => lista.slice(i * n, i * n + n));
+
+const modellate = PRODOTTI.filter((p) => p.tipo === 'modellata');
+const illustrate = PRODOTTI.filter((p) => p.tipo === 'illustrata');
+const chiediIllustrate = linkWhatsApp(
+	'Ciao Quentina! Vorrei vedere le tue ceramiche illustrate. Quando posso passare in laboratorio?',
+);
+---
+
+<Layout tema={tema} titolo="La vetrina" descrizione="Pezzi unici di ceramica modellati e illustrati a mano da SoyQuentina.">
+	<section class="contenitore apertura">
+		<h1>Tutta la vetrina</h1>
+		<p class="sottotitolo">
+			Ogni pezzo esiste in un solo esemplare. Tocca una ceramica per vederla da vicino.
+		</p>
+		<nav class="salti" aria-label="Vetrine">
+			<a class="bottone chiaro" href="#modellate">{TIPI.modellata.titolo}</a>
+			<a class="bottone chiaro" href="#illustrate">{TIPI.illustrata.titolo}</a>
+		</nav>
+	</section>
+
+	<section id="modellate" class="contenitore sezione" aria-labelledby="titolo-modellate">
+		<div class="intestazione">
+			<h2 id="titolo-modellate">{TIPI.modellata.titolo}</h2>
+			<p>{TIPI.modellata.spiegazione}</p>
+		</div>
+		<Parete etichetta={`${modellate.length} pezzi unici`}>
+			{aMensole(modellate).map((gruppo, i) => <Mensola prodotti={gruppo} partenza={i * 3} />)}
+		</Parete>
+	</section>
+
+	<section id="illustrate" class="contenitore sezione" aria-labelledby="titolo-illustrate">
+		<div class="intestazione">
+			<h2 id="titolo-illustrate">{TIPI.illustrata.titolo}</h2>
+			<p>{TIPI.illustrata.spiegazione}</p>
+		</div>
+		{
+			illustrate.length > 0 ? (
+				<Parete>
+					{aMensole(illustrate).map((gruppo, i) => <Mensola prodotti={gruppo} partenza={i * 3 + 1} />)}
+				</Parete>
+			) : (
+				<div class="vuota">
+					<p class="cartello-vuoto">In allestimento</p>
+					<div class="asse" aria-hidden="true"></div>
+					<div class="vuota-testo">
+						<p>Questa mensola si sta riempiendo. Le ceramiche illustrate puoi già vederle dal vivo in laboratorio.</p>
+						<a class="bottone" href={chiediIllustrate} target="_blank" rel="noopener">Chiedi su WhatsApp</a>
+					</div>
+				</div>
+			)
+		}
+	</section>
+
+	<div class="contenitore sezione">
+		<AvvisoSelezione />
+	</div>
+
+	<Pannello />
+</Layout>
+
+<style>
+	.apertura {
+		padding-top: clamp(24px, 4vw, 48px);
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+	.sottotitolo {
+		font-size: 1.2rem;
+		max-width: 48ch;
+	}
+	.salti {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+	}
+	.sezione {
+		margin-top: clamp(64px, 9vw, 112px);
+		scroll-margin-top: 24px;
+	}
+	.intestazione {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 12px 48px;
+		align-items: end;
+		margin-bottom: 28px;
+	}
+	.vuota {
+		background: var(--rosa);
+		border-radius: 40px 40px 0 0;
+		padding: 64px clamp(16px, 4vw, 56px) 0;
+		text-align: center;
+	}
+	.cartello-vuoto {
+		display: inline-block;
+		background: var(--bianco);
+		border: var(--linea);
+		border-radius: 999px;
+		padding: 6px 18px;
+		margin-bottom: 120px;
+		font-weight: 400;
+		transform: rotate(-3deg);
+	}
+	.asse {
+		height: 10px;
+		background: var(--nero);
+		border-radius: 3px;
+		margin: 0 calc(clamp(16px, 4vw, 56px) * -1);
+	}
+	.vuota-testo {
+		background: var(--bianco);
+		margin: 0 calc(clamp(16px, 4vw, 56px) * -1);
+		border: var(--linea);
+		border-top: 0;
+		border-radius: 0 0 32px 32px;
+		padding: 24px 28px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px 32px;
+		align-items: center;
+		justify-content: space-between;
+		text-align: left;
+	}
+	.vuota-testo p {
+		max-width: 56ch;
+	}
+	@media (max-width: 680px) {
+		.intestazione {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

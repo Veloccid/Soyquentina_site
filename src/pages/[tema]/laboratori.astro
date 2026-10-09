@@ -1,10 +1,17 @@
 ---
-import Pagina from '../components/Pagina.astro';
-import { SITO, linkWhatsApp } from '../config';
+import Pagina from '../../components/Pagina.astro';
+import { SITO, linkWhatsApp } from '../../config';
+import { percorsiTemi, link } from '../../temi';
+
+export function getStaticPaths() {
+	return percorsiTemi();
+}
+const { tema } = Astro.params as { tema: string };
 const prenota = linkWhatsApp('Ciao Quentina! Vorrei informazioni sui prossimi laboratori.');
 ---
 
 <Pagina
+	tema={tema}
 	titolo="Laboratori"
 	intro="Mani in pasta: impara a modellare e decorare la ceramica in un piccolo gruppo, nel mio homelab."
 	descrizione="Laboratori di ceramica a Garbatella, Roma, con SoyQuentina."
@@ -30,7 +37,7 @@ const prenota = linkWhatsApp('Ciao Quentina! Vorrei informazioni sui prossimi la
 	<p>Le date vengono annunciate su Instagram. Scrivimi per sapere quando c'è il prossimo laboratorio o per organizzarne uno privato.</p>
 	<div class="bottoni azioni">
 		<a class="bottone" href={prenota} target="_blank" rel="noopener">Chiedi info su WhatsApp</a>
-		<a class="bottone chiaro" href="/gift-card">Regala un laboratorio</a>
+		<a class="bottone chiaro" href={link(tema, '/gift-card')}>Regala un laboratorio</a>
 	</div>
 </Pagina>
 

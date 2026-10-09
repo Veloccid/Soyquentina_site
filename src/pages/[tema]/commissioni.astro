@@ -1,6 +1,13 @@
 ---
-import Pagina from '../components/Pagina.astro';
-import { linkWhatsApp } from '../config';
+import Pagina from '../../components/Pagina.astro';
+import { linkWhatsApp } from '../../config';
+import { percorsiTemi } from '../../temi';
+
+export function getStaticPaths() {
+	return percorsiTemi();
+}
+const { tema } = Astro.params as { tema: string };
+
 const scrivi = linkWhatsApp('Ciao Quentina! Vorrei commissionarti un pezzo. Ti racconto la mia idea:');
 
 const passi = [
@@ -12,6 +19,7 @@ const passi = [
 ---
 
 <Pagina
+	tema={tema}
 	titolo="Commissioni"
 	intro="Un pezzo pensato per te: per la tua casa, un regalo, un matrimonio o un'occasione speciale."
 	descrizione="Ceramiche su commissione, modellate e illustrate a mano da SoyQuentina."
@@ -60,7 +68,7 @@ const passi = [
 		width: 36px;
 		height: 36px;
 		border-radius: 50%;
-		background: var(--rosa);
+		background: var(--superficie);
 		font-weight: 400;
 	}
 	.azioni {

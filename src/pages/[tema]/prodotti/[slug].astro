@@ -1,0 +1,15 @@
+---
+import { TEMI } from '../../../temi';
+import { PRODOTTI } from '../../../data/prodotti';
+import Prodotto from '../../../proposte/comuni/Prodotto.astro';
+
+export function getStaticPaths() {
+	return TEMI.flatMap((t) =>
+		PRODOTTI.map((p) => ({ params: { tema: t.id, slug: p.slug }, props: { prodotto: p } })),
+	);
+}
+const { tema } = Astro.params as { tema: string };
+const { prodotto } = Astro.props;
+---
+
+<Prodotto tema={tema} prodotto={prodotto} />

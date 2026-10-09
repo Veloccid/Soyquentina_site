@@ -1,10 +1,14 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import SchedaProdotto from '../components/SchedaProdotto.astro';
-import AvvisoSelezione from '../components/AvvisoSelezione.astro';
-import { PRODOTTI, TIPI } from '../data/prodotti';
-import { linkWhatsApp } from '../config';
+import Layout from '../../layouts/Layout.astro';
+import SchedaProdotto from '../../components/SchedaProdotto.astro';
+import AvvisoSelezione from '../../components/AvvisoSelezione.astro';
+import { PRODOTTI, TIPI } from '../../data/prodotti';
+import { linkWhatsApp } from '../../config';
 
+interface Props {
+	tema: string;
+}
+const { tema } = Astro.props;
 const modellate = PRODOTTI.filter((p) => p.tipo === 'modellata');
 const illustrate = PRODOTTI.filter((p) => p.tipo === 'illustrata');
 const chiediIllustrate = linkWhatsApp(
@@ -12,28 +16,28 @@ const chiediIllustrate = linkWhatsApp(
 );
 ---
 
-<Layout titolo="Shop" descrizione="Una piccola selezione di ceramiche modellate e illustrate a mano da SoyQuentina.">
+<Layout tema={tema} titolo="Shop" descrizione="Una piccola selezione di ceramiche modellate e illustrate a mano da SoyQuentina.">
 	<section class="contenitore apertura">
-		<h1>Shop</h1>
-		<p class="sottotitolo">
+		<h1 data-rivela>Shop</h1>
+		<p class="sottotitolo" data-rivela>
 			Una piccola selezione delle mie ceramiche. Ogni pezzo è fatto a mano, quindi può essere
 			diverso dagli altri nelle forme e nei colori: è proprio questo il bello.
 		</p>
-		<nav class="salti" aria-label="Sezioni dello shop">
+		<nav class="salti" aria-label="Sezioni dello shop" data-rivela>
 			<a class="bottone chiaro" href="#modellate">{TIPI.modellata.titolo}</a>
 			<a class="bottone chiaro" href="#illustrate">{TIPI.illustrata.titolo}</a>
 		</nav>
 	</section>
 
 	<section id="modellate" class="contenitore sezione" aria-labelledby="titolo-modellate">
-		<div class="intestazione">
+		<div class="intestazione" data-rivela>
 			<h2 id="titolo-modellate">{TIPI.modellata.titolo}</h2>
 			<p class="testo-breve">{TIPI.modellata.spiegazione}</p>
 		</div>
 		{
 			modellate.length > 0 ? (
 				<div class="griglia">
-					{modellate.map((p) => <SchedaProdotto prodotto={p} />)}
+					{modellate.map((p) => <SchedaProdotto prodotto={p} tema={tema} />)}
 				</div>
 			) : (
 				<p class="vuoto">Al momento non ci sono ceramiche modellate a mano online.</p>
@@ -42,17 +46,17 @@ const chiediIllustrate = linkWhatsApp(
 	</section>
 
 	<section id="illustrate" class="contenitore sezione" aria-labelledby="titolo-illustrate">
-		<div class="intestazione">
+		<div class="intestazione" data-rivela>
 			<h2 id="titolo-illustrate">{TIPI.illustrata.titolo}</h2>
 			<p class="testo-breve">{TIPI.illustrata.spiegazione}</p>
 		</div>
 		{
 			illustrate.length > 0 ? (
 				<div class="griglia">
-					{illustrate.map((p) => <SchedaProdotto prodotto={p} />)}
+					{illustrate.map((p) => <SchedaProdotto prodotto={p} tema={tema} />)}
 				</div>
 			) : (
-				<div class="vuoto">
+				<div class="vuoto" data-rivela>
 					<p>Le ceramiche illustrate arrivano presto anche online. Intanto puoi vederle dal vivo in laboratorio.</p>
 					<a class="bottone" href={chiediIllustrate} target="_blank" rel="noopener">
 						Chiedi su WhatsApp
@@ -103,7 +107,7 @@ const chiediIllustrate = linkWhatsApp(
 		gap: 40px 24px;
 	}
 	.vuoto {
-		background: var(--rosa);
+		background: var(--superficie);
 		border-radius: 24px;
 		padding: 32px;
 		display: flex;
@@ -115,9 +119,34 @@ const chiediIllustrate = linkWhatsApp(
 	.vuoto p {
 		max-width: 52ch;
 	}
+
+	/* varianti */
+	:global([data-tema='rosa']) h1 {
+		font-size: clamp(4rem, 14vw, 10rem);
+		line-height: 0.9;
+		letter-spacing: -0.04em;
+	}
+	:global([data-tema='racconto']) .griglia {
+		grid-template-columns: repeat(3, 1fr);
+		gap: 56px 32px;
+	}
+	:global([data-tema='racconto']) .griglia > :global(:nth-child(3n + 2)) {
+		margin-top: 64px;
+	}
+	:global([data-tema='morbida']) .griglia {
+		gap: 48px 28px;
+	}
+	:global([data-tema='morbida']) .griglia > :global(:nth-child(even)) {
+		transform: translateY(28px);
+	}
+
 	@media (max-width: 900px) {
-		.griglia {
+		.griglia,
+		:global([data-tema='racconto']) .griglia {
 			grid-template-columns: repeat(2, 1fr);
+		}
+		:global([data-tema='racconto']) .griglia > :global(:nth-child(3n + 2)) {
+			margin-top: 0;
 		}
 	}
 	@media (max-width: 680px) {

@@ -1,0 +1,174 @@
+---
+// Pannello che si apre quando clicchi un pezzo sulla mensola. Va messo una sola volta per pagina.
+---
+
+<dialog class="pannello" aria-labelledby="pannello-nome">
+	<form method="dialog" class="chiudi-form">
+		<button class="chiudi" aria-label="Chiudi">Chiudi</button>
+	</form>
+	<div class="pannello-figura" aria-hidden="true"></div>
+	<div class="pannello-testo">
+		<p class="etichette">
+			<span class="tipo"></span>
+			<span class="unico">pezzo unico, 1 di 1</span>
+		</p>
+		<h2 id="pannello-nome"></h2>
+		<p class="prezzo"></p>
+		<p class="descrizione"></p>
+		<p class="misure tenue"></p>
+		<p class="spiega">
+			Ogni pezzo è un esemplare unico: forme e colori non si ripetono. Quello che vedi è
+			esattamente quello che ricevi.
+		</p>
+		<div class="bottoni">
+			<a class="bottone vai">Guardalo da vicino</a>
+			<a class="bottone chiaro wa" target="_blank" rel="noopener">Chiedi su WhatsApp</a>
+		</div>
+	</div>
+</dialog>
+
+<script is:inline>
+	(() => {
+		const d = document.querySelector('dialog.pannello');
+		if (!d) return;
+		const q = (s) => d.querySelector(s);
+		document.querySelectorAll('[data-pezzo]').forEach((b) => {
+			b.addEventListener('click', () => {
+				q('.tipo').textContent = b.dataset.tipo;
+				q('.unico').hidden = b.dataset.unico !== '1';
+				q('#pannello-nome').textContent = b.dataset.nome;
+				q('.prezzo').textContent = b.dataset.prezzo;
+				q('.descrizione').textContent = b.dataset.descrizione;
+				q('.misure').textContent = 'Misure: ' + b.dataset.misure;
+				q('.vai').href = b.dataset.link;
+				q('.wa').href = b.dataset.whatsapp;
+				const fig = b.querySelector('.figura');
+				q('.pannello-figura').innerHTML = fig ? fig.innerHTML : '';
+				d.showModal();
+			});
+		});
+		// clic fuori dal pannello per chiuderlo
+		d.addEventListener('click', (e) => {
+			if (e.target === d) d.close();
+		});
+	})();
+</script>
+
+<style>
+	.pannello {
+		border: var(--linea);
+		border-radius: 32px;
+		padding: 0;
+		width: min(860px, calc(100vw - 32px));
+		max-height: calc(100vh - 32px);
+		background: var(--bianco);
+		color: var(--nero);
+		overflow: auto;
+	}
+	.pannello[open] {
+		display: grid;
+		grid-template-columns: 1fr 1.2fr;
+		animation: apre 0.45s cubic-bezier(0.2, 1.2, 0.3, 1);
+	}
+	.pannello::backdrop {
+		background: rgba(253, 220, 215, 0.75);
+		backdrop-filter: blur(4px);
+	}
+	.chiudi-form {
+		position: absolute;
+		top: 16px;
+		right: 16px;
+		z-index: 2;
+	}
+	.chiudi {
+		font: inherit;
+		font-weight: 400;
+		background: var(--bianco);
+		border: var(--linea);
+		border-radius: 999px;
+		padding: 6px 16px;
+		cursor: pointer;
+	}
+	.pannello-figura {
+		background: var(--rosa);
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+		padding: 48px 40px 0;
+		min-height: 360px;
+		border-bottom: 10px solid var(--nero);
+	}
+	.pannello-figura :global(svg),
+	.pannello-figura :global(img) {
+		width: 70%;
+		height: auto;
+		max-height: 300px;
+	}
+	.pannello-figura :global(path) {
+		fill: var(--bianco);
+		stroke: var(--nero);
+		stroke-width: 2.6;
+		stroke-linejoin: round;
+	}
+	.pannello-testo {
+		padding: 56px 36px 36px;
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+	}
+	.etichette {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+	.etichette span {
+		border: var(--linea);
+		border-radius: 999px;
+		padding: 2px 12px;
+		font-size: 0.85rem;
+		font-weight: 400;
+	}
+	.unico {
+		background: var(--rosa);
+	}
+	h2 {
+		font-size: clamp(1.8rem, 4vw, 2.6rem);
+	}
+	.prezzo {
+		font-size: 1.4rem;
+		font-weight: 400;
+	}
+	.spiega {
+		font-size: 0.95rem;
+		border-top: var(--linea);
+		padding-top: 14px;
+	}
+	.bottoni {
+		margin-top: 6px;
+	}
+	@keyframes apre {
+		from {
+			opacity: 0;
+			transform: translateY(30px) scale(0.96);
+		}
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
+	@media (max-width: 700px) {
+		.pannello[open] {
+			grid-template-columns: 1fr;
+		}
+		.pannello-figura {
+			min-height: 220px;
+			padding-top: 56px;
+		}
+		.pannello-figura :global(svg) {
+			max-height: 180px;
+		}
+		.pannello-testo {
+			padding: 28px 22px 24px;
+		}
+	}
+</style>

@@ -1,0 +1,248 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Busto from '../../components/Busto.astro';
+import SchedaProdotto from '../../components/SchedaProdotto.astro';
+import AvvisoSelezione from '../../components/AvvisoSelezione.astro';
+import { PRODOTTI, TIPI } from '../../data/prodotti';
+import { SITO, linkWhatsApp } from '../../config';
+import { link } from '../../temi';
+
+const tema = 'racconto';
+const pezzi = PRODOTTI.filter((p) => p.disponibile);
+const visita = linkWhatsApp(
+	'Ciao Quentina! Vorrei passare in laboratorio a vedere le ceramiche. Quando posso venire?',
+);
+
+// le tappe del viaggio di un pezzo (testi provvisori da rivedere con Quentina)
+const tappe = [
+	{
+		titolo: "L'argilla",
+		testo: 'Tutto parte da un panetto di argilla. Lo lavoro con le mani finché non trova la sua forma: una tazza, un vaso, un piatto che prima non c’era.',
+	},
+	{
+		titolo: "L'attesa",
+		testo: 'Il pezzo deve asciugare piano, anche per giorni. Se ha fretta si crepa: la ceramica insegna la pazienza.',
+	},
+	{
+		titolo: 'Il primo fuoco',
+		testo: 'Prima cottura in forno: l’argilla diventa “biscotto”, dura ma ancora porosa, pronta per essere decorata.',
+	},
+	{
+		titolo: 'Il disegno',
+		testo: 'È il momento che amo di più: illustro a mano ogni pezzo e lo smalto. Nessun disegno viene uguale a un altro.',
+	},
+	{
+		titolo: 'Il secondo fuoco',
+		testo: 'Ultima cottura: gli smalti si fondono e i colori si fissano. Apro il forno e scopro com’è venuto. Ogni volta una sorpresa.',
+	},
+];
+---
+
+<Layout tema={tema}>
+	<section class="contenitore apertura">
+		<div class="apertura-testo">
+			<h1>Dall'argilla al forno, fino a casa tua</h1>
+			<p class="sottotitolo">
+				Ogni ceramica fa un piccolo viaggio nel mio homelab a {SITO.zona} prima di arrivare sulla tua tavola. Te lo racconto, tappa per tappa.
+			</p>
+			<a class="inizia" href="#viaggio">Inizia il racconto</a>
+		</div>
+		<div class="apertura-figura" aria-hidden="true">
+			<Busto altezza={220} alt="" />
+		</div>
+	</section>
+
+	<section id="viaggio" class="contenitore viaggio" aria-label="Il viaggio di una ceramica">
+		<ol>
+			{
+				tappe.map((t, i) => (
+					<li class:list={['tappa', { destra: i % 2 === 1 }]}>
+						<div class="tappa-testo">
+							<span class="numero">{i + 1}</span>
+							<h2>{t.titolo}</h2>
+							<p>{t.testo}</p>
+						</div>
+						{pezzi[i] && (
+							<div class="tappa-pezzo">
+								<SchedaProdotto prodotto={pezzi[i]} tema={tema} />
+							</div>
+						)}
+					</li>
+				))
+			}
+		</ol>
+	</section>
+
+	<section class="contenitore blocco due" aria-labelledby="titolo-due">
+		<h2 id="titolo-due">E le illustrate?</h2>
+		<div class="due-colonne">
+			<p>
+				Non tutti i pezzi nascono dall'argilla nel mio laboratorio. Per le{' '}
+				<strong>{TIPI.illustrata.titolo.toLowerCase()}</strong>{' '}
+				scelgo ceramiche già formate e il viaggio comincia dalla tappa 4: il disegno.
+			</p>
+			<p>
+				Per questo nello shop le trovi divise in due:{' '}
+				<a href={link(tema, '/shop#modellate')}>{TIPI.modellata.titolo.toLowerCase()}</a>{' '}
+				e{' '}
+				<a href={link(tema, '/shop#illustrate')}>{TIPI.illustrata.titolo.toLowerCase()}</a>.
+			</p>
+		</div>
+	</section>
+
+	<div class="contenitore blocco">
+		<AvvisoSelezione />
+	</div>
+
+	<section class="contenitore blocco finale" aria-label="Continua">
+		<a class="bottone" href={link(tema, '/shop')}>Vai allo shop</a>
+		<a class="bottone chiaro" href={visita} target="_blank" rel="noopener">Prenota una visita</a>
+		<a class="bottone chiaro" href={link(tema, '/laboratori')}>Fai un laboratorio</a>
+	</section>
+</Layout>
+
+<style>
+	.apertura {
+		display: grid;
+		grid-template-columns: 1.4fr 1fr;
+		gap: clamp(32px, 6vw, 96px);
+		align-items: center;
+		padding-top: clamp(32px, 6vw, 80px);
+		min-height: 70vh;
+	}
+	.apertura-testo {
+		display: flex;
+		flex-direction: column;
+		gap: 22px;
+	}
+	.apertura h1 {
+		font-size: clamp(2.8rem, 7vw, 6rem);
+		line-height: 0.98;
+		letter-spacing: -0.035em;
+	}
+	.sottotitolo {
+		font-size: 1.25rem;
+		max-width: 40ch;
+	}
+	.inizia {
+		font-weight: 400;
+		text-underline-offset: 6px;
+	}
+	.apertura-figura {
+		background: var(--rosa);
+		border-radius: 999px 999px 0 0;
+		aspect-ratio: 3 / 4;
+		display: flex;
+		align-items: flex-end;
+		justify-content: center;
+		padding-bottom: 14%;
+	}
+
+	.viaggio {
+		margin-top: clamp(80px, 12vw, 160px);
+	}
+	.viaggio ol {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: clamp(72px, 10vw, 140px);
+		position: relative;
+	}
+	.viaggio ol::before {
+		content: '';
+		position: absolute;
+		left: 50%;
+		top: 0;
+		bottom: 0;
+		border-left: 1.5px dashed var(--nero);
+	}
+	.tappa {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: clamp(48px, 8vw, 120px);
+		align-items: center;
+		position: relative;
+	}
+	.tappa.destra .tappa-testo {
+		order: 2;
+	}
+	.tappa-testo {
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		background: var(--sfondo);
+		position: relative;
+	}
+	.numero {
+		font-size: clamp(4rem, 9vw, 7rem);
+		line-height: 0.8;
+		font-weight: 300;
+		letter-spacing: -0.05em;
+	}
+	.tappa h2 {
+		font-size: clamp(2rem, 4vw, 3rem);
+	}
+	.tappa p {
+		font-size: 1.15rem;
+		max-width: 40ch;
+	}
+	.tappa-pezzo {
+		max-width: 300px;
+		width: 100%;
+		justify-self: center;
+		background: var(--sfondo);
+		padding: 12px;
+	}
+
+	.blocco {
+		margin-top: clamp(72px, 10vw, 128px);
+	}
+	.due h2 {
+		font-size: clamp(2.2rem, 5vw, 3.6rem);
+		margin-bottom: 28px;
+	}
+	.due-colonne {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 32px 56px;
+		font-size: 1.2rem;
+		border-top: var(--linea);
+		padding-top: 28px;
+	}
+	.due-colonne strong {
+		font-weight: 400;
+	}
+	.due-colonne a {
+		text-underline-offset: 5px;
+	}
+	.finale {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		justify-content: center;
+	}
+
+	@media (max-width: 760px) {
+		.apertura,
+		.tappa,
+		.due-colonne {
+			grid-template-columns: 1fr;
+		}
+		.apertura-figura {
+			max-width: 320px;
+		}
+		.tappa.destra .tappa-testo {
+			order: 0;
+		}
+		.viaggio ol::before {
+			left: 18px;
+		}
+		.tappa-pezzo {
+			justify-self: start;
+			max-width: 240px;
+			margin-left: 18px;
+		}
+	}
+</style>

@@ -1,10 +1,17 @@
 ---
-import Pagina from '../components/Pagina.astro';
-import Foto from '../components/Foto.astro';
-import { SITO, linkWhatsApp } from '../config';
+import Pagina from '../../components/Pagina.astro';
+import Foto from '../../components/Foto.astro';
+import { SITO, linkWhatsApp } from '../../config';
+import { percorsiTemi } from '../../temi';
+
+export function getStaticPaths() {
+	return percorsiTemi();
+}
+const { tema } = Astro.params as { tema: string };
 ---
 
 <Pagina
+	tema={tema}
 	titolo="Chi sono"
 	intro="Perlopiù illustro sulla ceramica. E poi modello, cuocio, sbaglio e riprovo."
 	descrizione="SoyQuentina: ceramiche modellate e illustrate a mano in un homelab a Garbatella, Roma."

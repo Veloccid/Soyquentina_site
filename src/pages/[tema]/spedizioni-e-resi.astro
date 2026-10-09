@@ -1,8 +1,15 @@
 ---
-import Pagina from '../components/Pagina.astro';
+import Pagina from '../../components/Pagina.astro';
+import { percorsiTemi } from '../../temi';
+
+export function getStaticPaths() {
+	return percorsiTemi();
+}
+const { tema } = Astro.params as { tema: string };
+
 ---
 
-<Pagina titolo="Spedizioni e resi" descrizione="Come spedisco le ceramiche SoyQuentina e come funzionano i resi." daCompletare>
+<Pagina tema={tema} titolo="Spedizioni e resi" descrizione="Come spedisco le ceramiche SoyQuentina e come funzionano i resi." daCompletare>
 	<h2>Spedizioni</h2>
 	<ul>
 		<li>Paesi in cui spedisco: da definire (es. solo Italia).</li>

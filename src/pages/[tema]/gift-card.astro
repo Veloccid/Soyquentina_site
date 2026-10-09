@@ -1,13 +1,21 @@
 ---
-import Pagina from '../components/Pagina.astro';
-import Busto from '../components/Busto.astro';
-import { linkWhatsApp } from '../config';
+import Pagina from '../../components/Pagina.astro';
+import Busto from '../../components/Busto.astro';
+import { linkWhatsApp } from '../../config';
+import { percorsiTemi } from '../../temi';
+
+export function getStaticPaths() {
+	return percorsiTemi();
+}
+const { tema } = Astro.params as { tema: string };
+
 
 // Importi segnaposto: da confermare
 const importi = [30, 50, 100];
 ---
 
 <Pagina
+	tema={tema}
 	titolo="Gift card"
 	intro="Regala una ceramica o un laboratorio, e lascia scegliere a chi la riceve."
 	descrizione="Gift card SoyQuentina: per ceramiche fatte a mano e laboratori."
@@ -48,7 +56,7 @@ const importi = [30, 50, 100];
 		margin-bottom: 56px;
 	}
 	.carta {
-		background: var(--rosa);
+		background: var(--superficie);
 		border-radius: 28px;
 		aspect-ratio: 1.6;
 		padding: 24px;

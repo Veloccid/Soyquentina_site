@@ -1,15 +1,18 @@
 ---
 import Foto from './Foto.astro';
 import { type Prodotto, TIPI, prezzoFormattato } from '../data/prodotti';
+import { link } from '../temi';
 
 interface Props {
 	prodotto: Prodotto;
+	tema: string;
 }
-const { prodotto } = Astro.props;
+const { prodotto, tema } = Astro.props;
 ---
 
-<a class="scheda" href={`/prodotti/${prodotto.slug}`}>
+<a class="scheda" href={link(tema, `/prodotti/${prodotto.slug}`)} data-rivela>
 	<Foto src={prodotto.foto[0]} alt={prodotto.nome} />
+	{prodotto.pezzoUnico && <span class="adesivo">pezzo unico</span>}
 	<div class="info">
 		<h3>{prodotto.nome}</h3>
 		<p class="prezzo">{prezzoFormattato(prodotto.prezzo)}</p>
@@ -27,10 +30,14 @@ const { prodotto } = Astro.props;
 		position: relative;
 	}
 	.scheda :global(.foto) {
-		transition: border-radius 0.35s ease;
+		transition: border-radius 0.35s ease, background 0.3s ease;
 	}
-	.scheda:hover :global(.foto) {
+	:global([data-tema='essenziale']) .scheda:hover :global(.foto),
+	:global([data-tema='racconto']) .scheda:hover :global(.foto) {
 		border-radius: 999px 999px 24px 24px;
+	}
+	:global([data-tema='rosa']) .scheda:hover :global(.foto) {
+		border-radius: 999px 999px 999px 999px;
 	}
 	.info {
 		display: flex;
@@ -59,5 +66,30 @@ const { prodotto } = Astro.props;
 		border-radius: 999px;
 		padding: 2px 12px;
 		font-size: 0.85rem;
+	}
+
+	/* adesivo "pezzo unico": solo nella proposta Morbida */
+	.adesivo {
+		display: none;
+	}
+	:global([data-tema='morbida']) .adesivo {
+		display: block;
+		position: absolute;
+		top: 14px;
+		right: 6px;
+		background: var(--bianco);
+		border: var(--linea);
+		border-radius: 999px;
+		padding: 4px 12px;
+		font-size: 0.85rem;
+		font-weight: 400;
+		transform: rotate(8deg);
+		transition: transform 0.3s cubic-bezier(0.3, 1.6, 0.5, 1);
+	}
+	:global([data-tema='morbida']) .scheda:hover .adesivo {
+		transform: rotate(-6deg) scale(1.08);
+	}
+	:global([data-tema='morbida']) .tipo {
+		display: none;
 	}
 </style>

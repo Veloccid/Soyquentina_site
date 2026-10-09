@@ -1,0 +1,165 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import AvvisoSelezione from '../../components/AvvisoSelezione.astro';
+import Parete from './Parete.astro';
+import Mensola from './Mensola.astro';
+import Pannello from './Pannello.astro';
+import { PRODOTTI, TIPI } from '../../data/prodotti';
+import { SITO } from '../../config';
+import { link } from '../../temi';
+
+const tema = 'vetrina';
+const esposti = PRODOTTI.filter((p) => p.disponibile).slice(0, 6);
+---
+
+<Layout tema={tema}>
+	<section class="contenitore apertura">
+		<h1>La vetrina</h1>
+		<p class="sottotitolo">
+			Pezzi unici, uno per forma. Tocca una ceramica per guardarla da vicino.
+		</p>
+	</section>
+
+	<div class="contenitore">
+		<Parete etichetta="In vetrina adesso">
+			<Mensola prodotti={esposti.slice(0, 3)} />
+			<Mensola prodotti={esposti.slice(3, 6)} partenza={3} />
+		</Parete>
+		<div class="sotto-parete">
+			<p>Ogni pezzo esiste in un solo esemplare: quando è venduto, al suo posto arriva qualcosa di nuovo.</p>
+			<a class="bottone" href={link(tema, '/shop')}>Guarda tutta la vetrina</a>
+		</div>
+	</div>
+
+	<section class="contenitore cartelli" aria-labelledby="titolo-cartelli">
+		<h2 id="titolo-cartelli">Due vetrine, due modi di fare ceramica</h2>
+		<div class="coppia">
+			<a class="cartello" href={link(tema, '/shop#modellate')}>
+				<span class="chiodo" aria-hidden="true"></span>
+				<h3>{TIPI.modellata.titolo}</h3>
+				<p>{TIPI.modellata.spiegazione}</p>
+			</a>
+			<a class="cartello" href={link(tema, '/shop#illustrate')}>
+				<span class="chiodo" aria-hidden="true"></span>
+				<h3>{TIPI.illustrata.titolo}</h3>
+				<p>{TIPI.illustrata.spiegazione}</p>
+			</a>
+		</div>
+	</section>
+
+	<div class="contenitore blocco">
+		<AvvisoSelezione />
+	</div>
+
+	<section class="contenitore blocco altro" aria-label="Altro">
+		<a href={link(tema, '/laboratori')}><h3>Laboratori</h3><p>Impara a modellare e decorare nel mio homelab a {SITO.zona}.</p></a>
+		<a href={link(tema, '/commissioni')}><h3>Commissioni</h3><p>Un pezzo pensato per te.</p></a>
+		<a href={link(tema, '/gift-card')}><h3>Gift card</h3><p>Regala una ceramica o un laboratorio.</p></a>
+	</section>
+
+	<Pannello />
+</Layout>
+
+<style>
+	.apertura {
+		padding-top: clamp(24px, 4vw, 48px);
+		padding-bottom: 32px;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		text-align: center;
+		gap: 14px;
+	}
+	.sottotitolo {
+		font-size: 1.2rem;
+		max-width: 40ch;
+	}
+	.sotto-parete {
+		border: var(--linea);
+		border-top: 0;
+		border-radius: 0 0 32px 32px;
+		padding: 24px 28px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px 32px;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.sotto-parete p {
+		max-width: 56ch;
+	}
+	.cartelli,
+	.blocco {
+		margin-top: clamp(72px, 10vw, 128px);
+	}
+	.coppia {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 32px;
+		margin-top: 40px;
+	}
+	.cartello {
+		position: relative;
+		border: var(--linea);
+		border-radius: 20px;
+		padding: 40px 32px 32px;
+		text-decoration: none;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+		transform: rotate(-1deg);
+		transform-origin: 50% 0;
+		transition: transform 0.5s cubic-bezier(0.3, 1.6, 0.5, 1), background 0.2s;
+	}
+	.cartello + .cartello {
+		transform: rotate(1.2deg);
+	}
+	.cartello:hover {
+		transform: rotate(0deg);
+		background: var(--rosa);
+	}
+	.chiodo {
+		position: absolute;
+		top: 14px;
+		left: 50%;
+		width: 12px;
+		height: 12px;
+		border-radius: 50%;
+		background: var(--nero);
+		transform: translateX(-50%);
+	}
+	.cartello h3 {
+		font-size: clamp(1.6rem, 3vw, 2.2rem);
+	}
+	.altro {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		border-top: var(--linea);
+	}
+	.altro a {
+		padding: 24px 24px 24px 0;
+		text-decoration: none;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.altro a + a {
+		border-left: var(--linea);
+		padding-left: 24px;
+	}
+	.altro a:hover h3 {
+		text-decoration: underline;
+		text-underline-offset: 6px;
+	}
+	@media (max-width: 760px) {
+		.coppia,
+		.altro {
+			grid-template-columns: 1fr;
+		}
+		.altro a + a {
+			border-left: 0;
+			border-top: var(--linea);
+			padding-left: 0;
+		}
+	}
+</style>

@@ -11,7 +11,7 @@ const link = linkWhatsApp(
 );
 ---
 
-<aside class:list={['avviso', { compatto }]}>
+<aside class:list={['avviso', { compatto }]} data-rivela>
 	<div class="testo">
 		<h2>Qui trovi solo una piccola selezione</h2>
 		<p>
@@ -24,14 +24,18 @@ const link = linkWhatsApp(
 
 <style>
 	.avviso {
-		background: var(--rosa);
-		border-radius: 32px;
+		background: var(--superficie);
+		border-radius: var(--raggio);
 		padding: clamp(28px, 5vw, 56px);
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		gap: 28px 48px;
 		flex-wrap: wrap;
+	}
+	:global([data-tema='rosa']) .avviso,
+	:global([data-tema='morbida']) .avviso {
+		border: var(--linea);
 	}
 	.testo {
 		max-width: 56ch;

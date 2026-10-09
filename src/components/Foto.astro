@@ -28,7 +28,14 @@ const { src, alt, grande = false } = Astro.props;
 		aspect-ratio: 4 / 5;
 		border-radius: 999px 999px 0 0;
 		overflow: hidden;
-		background: var(--rosa);
+		background: var(--superficie);
+	}
+	:global([data-tema='morbida']) .foto {
+		border-radius: 46% 54% 42% 58% / 38% 40% 60% 62%;
+		border: var(--linea);
+	}
+	:global([data-tema='rosa']) .foto {
+		border: var(--linea);
 	}
 	.foto img {
 		width: 100%;
