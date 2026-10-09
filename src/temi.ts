@@ -38,6 +38,24 @@ export const TEMI = [
 		nome: 'Morbida',
 		idea: 'Forme tonde, etichette come adesivi, piccoli dettagli giocosi. La più leggera e simpatica.',
 	},
+	{
+		id: 'bacheca',
+		lettera: 'G',
+		nome: 'Bacheca',
+		idea: 'I pezzi sono foto appese su una bacheca rosa: si possono spostare col dito o col mouse, come su un tavolo di lavoro.',
+	},
+	{
+		id: 'laboratorio',
+		lettera: 'H',
+		nome: 'Laboratorio',
+		idea: 'Entri nel laboratorio disegnato e lo esplori: mensole, tavolo, forno. Tocchi gli oggetti per scoprire i pezzi in vendita.',
+	},
+	{
+		id: 'flusso',
+		lettera: 'I',
+		nome: 'Flusso',
+		idea: 'Minimal ma tutta guidata dallo scroll: le parole si accendono, i pezzi si impilano, il rosa riempie lo schermo.',
+	},
 ] as const;
 
 export type IdTema = (typeof TEMI)[number]['id'];

@@ -1,0 +1,512 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Sagoma from '../vetrina/Sagoma.astro';
+import Pannello from '../vetrina/Pannello.astro';
+import { PRODOTTI, TIPI, prezzoFormattato } from '../../data/prodotti';
+import { SITO, linkWhatsApp } from '../../config';
+import { link } from '../../temi';
+
+const tema = 'laboratorio';
+const pezzi = PRODOTTI.filter((p) => p.disponibile).slice(0, 7);
+const visita = linkWhatsApp(
+	'Ciao Quentina! Vorrei passare in laboratorio a vedere le ceramiche. Quando posso venire?',
+);
+
+// La stanza è disegnata su una tela di 2400 x 900. Le posizioni sono in queste coordinate.
+const L = 2400;
+const H = 900;
+const pct = (x: number, y: number) => `left:${(x / L) * 100}%; top:${(y / H) * 100}%`;
+
+// dove stanno i pezzi: x = centro, base = dove poggiano, s = scala della sagoma (100x120)
+const appoggi = [
+	{ x: 1000, base: 352, s: 1.25 },
+	{ x: 1200, base: 352, s: 1.0 },
+	{ x: 1400, base: 352, s: 0.95 },
+	{ x: 1060, base: 562, s: 1.15 },
+	{ x: 1330, base: 562, s: 1.05 },
+	{ x: 1700, base: 602, s: 1.1 },
+	{ x: 1880, base: 602, s: 0.9 },
+];
+
+// i posti del laboratorio, cliccabili
+const posti = [
+	{ id: 'porta', nome: 'La porta', testo: 'Prenota una visita', href: visita, esterno: true, x: 150, y: 330 },
+	{ id: 'insegna', nome: "L'insegna", testo: 'Chi sono', href: link(tema, '/chi-sono'), x: 720, y: 250 },
+	{ id: 'mensole', nome: 'Le mensole', testo: 'Tutto lo shop', href: link(tema, '/shop'), x: 1200, y: 150 },
+	{ id: 'tavolo', nome: 'Il tavolo', testo: 'Commissioni', href: link(tema, '/commissioni'), x: 1800, y: 700 },
+	{ id: 'forno', nome: 'Il forno', testo: 'Laboratori', href: link(tema, '/laboratori'), x: 2240, y: 300 },
+];
+---
+
+<Layout tema={tema}>
+	<section class="contenitore testa">
+		<h1>Benvenuta in laboratorio</h1>
+		<p>
+			Questo è il mio homelab a {SITO.zona}. Scorri per girare la stanza: tocca i pezzi per scoprirli,
+			tocca i posti per andare altrove.
+		</p>
+		<nav class="mappa" aria-label="Vai a un punto del laboratorio">
+			{posti.map((p) => <button type="button" data-vai={p.x}>{p.nome}</button>)}
+		</nav>
+	</section>
+
+	<section class="giro" data-giro aria-label="Il laboratorio">
+		<div class="giro-fisso">
+			<div class="stanza-scorre" data-scorre>
+				<div class="stanza">
+					<svg class="disegno" viewBox={`0 0 ${L} ${H}`} aria-hidden="true">
+						<!-- parete e pavimento -->
+						<rect x="0" y="0" width={L} height="700" class="parete" />
+						<rect x="0" y="700" width={L} height="200" class="pavimento" />
+						<line x1="0" y1="700" x2={L} y2="700" class="tratto" />
+						{Array.from({ length: 24 }, (_, i) => <line x1={i * 100 + 50} y1="700" x2={i * 100 - 20} y2="900" class="tratto sottile" />)}
+
+						<!-- porta -->
+						<rect x="40" y="190" width="220" height="510" rx="110" class="bianco tratto" />
+						<circle cx="225" cy="470" r="9" class="nero" />
+						<rect x="60" y="640" width="180" height="60" class="tappeto" />
+
+						<!-- finestra -->
+						<rect x="340" y="140" width="240" height="300" rx="120" class="cielo tratto" />
+						<line x1="460" y1="140" x2="460" y2="440" class="tratto" />
+						<line x1="340" y1="300" x2="580" y2="300" class="tratto" />
+						<rect x="320" y="440" width="280" height="16" class="nero" />
+						<path d="M380 440 c 0 -40 30 -60 40 -40 c 10 -30 40 -20 36 10 c 20 -10 30 10 20 30 z" class="bianco tratto" />
+
+						<!-- insegna col logo -->
+						<circle cx="720" cy="250" r="110" class="bianco tratto" />
+						<image href="/brand/logo.png" x="610" y="140" width="220" height="220" />
+						<line x1="720" y1="140" x2="720" y2="60" class="tratto" />
+
+						<!-- mensole -->
+						<rect x="880" y="352" width="640" height="14" class="nero" />
+						<rect x="880" y="562" width="640" height="14" class="nero" />
+						<path d="M920 366 l 30 40 M1480 366 l -30 40 M920 576 l 30 40 M1480 576 l -30 40" class="tratto" />
+
+						<!-- tavolo di lavoro -->
+						<rect x="1580" y="602" width="520" height="22" class="nero" />
+						<rect x="1610" y="624" width="16" height="220" class="nero" />
+						<rect x="2054" y="624" width="16" height="220" class="nero" />
+						<rect x="1960" y="566" width="110" height="36" rx="18" class="bianco tratto" />
+						<circle cx="1640" cy="588" r="14" class="bianco tratto" />
+						<rect x="1990" y="540" width="70" height="10" rx="5" class="nero" transform="rotate(-12 2025 545)" />
+
+						<!-- forno -->
+						<rect x="2140" y="380" width="220" height="460" rx="24" class="bianco tratto spesso" />
+						<rect x="2170" y="420" width="160" height="260" rx="14" class="rosa tratto" />
+						<circle cx="2250" cy="520" r="34" class="bianco tratto" />
+						<rect x="2310" y="530" width="12" height="60" rx="6" class="nero" />
+						<circle cx="2190" cy="740" r="14" class="bianco tratto" />
+						<circle cx="2250" cy="740" r="14" class="bianco tratto" />
+						<g class="calore">
+							<path d="M2200 360 C 2185 330, 2215 310, 2200 280 S 2215 240, 2200 210" />
+							<path d="M2250 360 C 2235 330, 2265 310, 2250 280 S 2265 240, 2250 210" />
+							<path d="M2300 360 C 2285 330, 2315 310, 2300 280 S 2315 240, 2300 210" />
+						</g>
+					</svg>
+
+					<!-- i pezzi in vendita, appoggiati sulle mensole e sul tavolo -->
+					{
+						pezzi.map((p, i) => {
+							const a = appoggi[i];
+							const w = 100 * a.s;
+							const h = 120 * a.s;
+							return (
+								<button
+									type="button"
+									class="oggetto"
+									style={`left:${((a.x - w / 2) / L) * 100}%; top:${((a.base - h) / H) * 100}%; width:${(w / L) * 100}%; height:${(h / H) * 100}%`}
+									data-pezzo
+									data-nome={p.nome}
+									data-prezzo={prezzoFormattato(p.prezzo)}
+									data-tipo={TIPI[p.tipo].etichetta}
+									data-descrizione={p.descrizione}
+									data-misure={p.dimensioni}
+									data-link={link(tema, `/prodotti/${p.slug}`)}
+									data-whatsapp={linkWhatsApp(`Ciao Quentina! Mi interessa "${p.nome}". È ancora disponibile?`)}
+									data-unico={p.pezzoUnico ? '1' : '0'}
+									aria-label={`${p.nome}, ${prezzoFormattato(p.prezzo)}. Apri il dettaglio`}
+								>
+									<span class="figura">
+										<Sagoma indice={i} foto={p.foto[0]} alt={p.nome} />
+									</span>
+									<span class="pulsa" aria-hidden="true" />
+									<span class="etichetta" aria-hidden="true">{prezzoFormattato(p.prezzo)}</span>
+								</button>
+							);
+						})
+					}
+
+					<!-- i posti del laboratorio -->
+					{
+						posti.map((p) => (
+							<a
+								class="posto"
+								href={p.href}
+								style={pct(p.x, p.y)}
+								target={p.esterno ? '_blank' : undefined}
+								rel={p.esterno ? 'noopener' : undefined}
+							>
+								<span class="posto-nome">{p.nome}</span>
+								<span class="posto-vai">{p.testo}</span>
+							</a>
+						))
+					}
+				</div>
+			</div>
+			<div class="barra-giro" aria-hidden="true"><span data-avanzamento></span></div>
+		</div>
+	</section>
+
+	<section class="contenitore sotto" aria-label="Informazioni">
+		<div class="riquadro">
+			<h2>Qui trovi solo una piccola selezione</h2>
+			<p>
+				Le mensole del sito sono piccole: dal vivo ce ne sono molte di più. Vieni a trovarmi in
+				laboratorio su appuntamento.
+			</p>
+			<a class="bottone" href={visita} target="_blank" rel="noopener">Prenota una visita su WhatsApp</a>
+		</div>
+		<div class="riquadro">
+			<h2>Due modi di fare ceramica</h2>
+			<p><strong>{TIPI.modellata.titolo}:</strong> {TIPI.modellata.spiegazione}</p>
+			<p><strong>{TIPI.illustrata.titolo}:</strong> {TIPI.illustrata.spiegazione}</p>
+			<a class="bottone chiaro" href={link(tema, '/shop')}>Vai allo shop</a>
+		</div>
+	</section>
+
+	<Pannello />
+
+	<script is:inline>
+		(() => {
+			const giro = document.querySelector('[data-giro]');
+			const scorre = document.querySelector('[data-scorre]');
+			const stanza = document.querySelector('.stanza');
+			const barra = document.querySelector('[data-avanzamento]');
+			if (!giro || !scorre || !stanza) return;
+			const largo = () => matchMedia('(min-width: 761px)').matches;
+
+			// su computer: scorrendo in verticale la stanza scorre in orizzontale
+			const corsa = () => Math.max(stanza.offsetWidth - innerWidth, 0);
+			const dimensiona = () => {
+				giro.style.height = largo() ? `${corsa() + innerHeight}px` : '';
+				aggiorna();
+			};
+			const aggiorna = () => {
+				let p = 0;
+				if (largo()) {
+					const r = giro.getBoundingClientRect();
+					p = Math.min(Math.max(-r.top / Math.max(corsa(), 1), 0), 1);
+					scorre.style.transform = `translateX(${-p * corsa()}px)`;
+				} else {
+					scorre.style.transform = '';
+					p = scorre.scrollLeft / Math.max(scorre.scrollWidth - scorre.clientWidth, 1);
+				}
+				if (barra) barra.style.width = `${p * 100}%`;
+			};
+			addEventListener('scroll', aggiorna, { passive: true });
+			scorre.addEventListener('scroll', aggiorna, { passive: true });
+			addEventListener('resize', dimensiona);
+			addEventListener('load', dimensiona);
+			dimensiona();
+
+			// i pulsanti della mappa portano al punto della stanza
+			document.querySelectorAll('[data-vai]').forEach((b) => {
+				b.addEventListener('click', () => {
+					const x = (Number(b.dataset.vai) / 2400) * stanza.offsetWidth - innerWidth / 2;
+					const meta = Math.min(Math.max(x, 0), corsa());
+					if (largo()) {
+						const top = giro.getBoundingClientRect().top + scrollY + meta;
+						scrollTo({ top, behavior: 'smooth' });
+					} else {
+						giro.scrollIntoView({ behavior: 'smooth' });
+						scorre.scrollTo({ left: meta, behavior: 'smooth' });
+					}
+				});
+			});
+		})();
+	</script>
+</Layout>
+
+<style>
+	.testa {
+		padding-top: clamp(24px, 4vw, 48px);
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+	}
+	.testa p {
+		font-size: 1.2rem;
+		max-width: 54ch;
+	}
+	.mappa {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+		margin-top: 6px;
+	}
+	.mappa button {
+		font: inherit;
+		font-weight: 400;
+		font-size: 0.95rem;
+		background: var(--bianco);
+		border: var(--linea);
+		border-radius: 999px;
+		padding: 6px 16px;
+		cursor: pointer;
+	}
+	.mappa button:hover {
+		background: var(--rosa);
+	}
+
+	.giro {
+		margin-top: 28px;
+		position: relative;
+	}
+	.giro-fisso {
+		position: sticky;
+		top: 0;
+		height: 100vh;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+	.stanza-scorre {
+		will-change: transform;
+	}
+	.stanza {
+		position: relative;
+		height: min(calc(100vh - 90px), 760px);
+		aspect-ratio: 2400 / 900;
+	}
+	.disegno {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+	}
+	.parete {
+		fill: var(--rosa);
+	}
+	.pavimento {
+		fill: var(--bianco);
+	}
+	.tappeto {
+		fill: var(--rosa);
+		stroke: var(--nero);
+		stroke-width: 3;
+	}
+	.cielo {
+		fill: var(--bianco);
+	}
+	.bianco {
+		fill: var(--bianco);
+	}
+	.rosa {
+		fill: var(--rosa);
+	}
+	.nero {
+		fill: var(--nero);
+	}
+	.tratto {
+		stroke: var(--nero);
+		stroke-width: 4;
+		fill-opacity: 1;
+	}
+	line.tratto,
+	path.tratto {
+		fill: none;
+	}
+	.tratto.sottile {
+		stroke-width: 1.5;
+		opacity: 0.25;
+	}
+	.tratto.spesso {
+		stroke-width: 6;
+	}
+	.calore path {
+		fill: none;
+		stroke: var(--nero);
+		stroke-width: 5;
+		stroke-linecap: round;
+		stroke-dasharray: 180;
+		stroke-dashoffset: 180;
+		animation: sale 2.4s ease-in-out infinite;
+	}
+	.calore path:nth-child(2) {
+		animation-delay: 0.6s;
+	}
+	.calore path:nth-child(3) {
+		animation-delay: 1.2s;
+	}
+	@keyframes sale {
+		0% {
+			stroke-dashoffset: 180;
+			opacity: 0;
+		}
+		30% {
+			opacity: 1;
+		}
+		100% {
+			stroke-dashoffset: -180;
+			opacity: 0;
+		}
+	}
+
+	.oggetto {
+		all: unset;
+		position: absolute;
+		cursor: pointer;
+		display: block;
+	}
+	.oggetto .figura {
+		display: block;
+		width: 100%;
+		height: 100%;
+		transform-origin: 50% 100%;
+		transition: transform 0.35s cubic-bezier(0.2, 1.4, 0.4, 1);
+	}
+	.oggetto:hover .figura,
+	.oggetto:focus-visible .figura {
+		transform: translateY(-8%) rotate(-3deg) scale(1.06);
+	}
+	.oggetto:focus-visible {
+		outline: 2px solid var(--nero);
+		outline-offset: 6px;
+		border-radius: 10px;
+	}
+	.pulsa {
+		position: absolute;
+		top: 8%;
+		right: -6%;
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		background: var(--nero);
+		border: 3px solid var(--bianco);
+		box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.35);
+		animation: pulsa 1.8s ease-out infinite;
+	}
+	@keyframes pulsa {
+		0% {
+			box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.35);
+		}
+		100% {
+			box-shadow: 0 0 0 16px rgba(0, 0, 0, 0);
+		}
+	}
+	.etichetta {
+		position: absolute;
+		left: 50%;
+		bottom: calc(100% + 6px);
+		transform: translate(-50%, 6px);
+		background: var(--nero);
+		color: var(--bianco);
+		border-radius: 999px;
+		padding: 2px 10px;
+		font-size: 0.82rem;
+		white-space: nowrap;
+		opacity: 0;
+		transition: opacity 0.2s, transform 0.2s;
+		pointer-events: none;
+	}
+	.oggetto:hover .etichetta,
+	.oggetto:focus-visible .etichetta {
+		opacity: 1;
+		transform: translate(-50%, 0);
+	}
+
+	.posto {
+		position: absolute;
+		transform: translate(-50%, -50%);
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 2px;
+		background: var(--bianco);
+		border: var(--linea);
+		border-radius: 18px;
+		padding: 6px 14px;
+		text-decoration: none;
+		white-space: nowrap;
+		transition: background 0.2s, transform 0.25s;
+		z-index: 2;
+	}
+	.posto:hover {
+		background: var(--nero);
+		color: var(--bianco);
+		transform: translate(-50%, -50%) scale(1.06);
+	}
+	.posto-nome {
+		font-weight: 400;
+		font-size: 0.95rem;
+	}
+	.posto-vai {
+		font-size: 0.8rem;
+		text-decoration: underline;
+		text-underline-offset: 3px;
+	}
+
+	.barra-giro {
+		width: min(300px, 60vw);
+		height: 6px;
+		border-radius: 999px;
+		background: var(--rosa);
+		margin: 18px auto 0;
+		overflow: hidden;
+	}
+	.barra-giro span {
+		display: block;
+		height: 100%;
+		width: 0;
+		background: var(--nero);
+	}
+
+	.sotto {
+		margin-top: clamp(48px, 8vw, 96px);
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 24px;
+	}
+	.riquadro {
+		border: var(--linea);
+		border-radius: 28px;
+		padding: clamp(24px, 4vw, 40px);
+		display: flex;
+		flex-direction: column;
+		gap: 14px;
+		align-items: flex-start;
+	}
+	.riquadro:first-child {
+		background: var(--rosa);
+	}
+	.riquadro h2 {
+		font-size: clamp(1.5rem, 2.6vw, 2rem);
+	}
+	.riquadro strong {
+		font-weight: 400;
+	}
+
+	@media (max-width: 760px) {
+		.giro-fisso {
+			position: static;
+			height: auto;
+		}
+		.stanza-scorre {
+			overflow-x: auto;
+			scroll-snap-type: x proximity;
+		}
+		.stanza {
+			height: 440px;
+		}
+		.sotto {
+			grid-template-columns: 1fr;
+		}
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.pulsa {
+			animation: none;
+		}
+	}
+</style>

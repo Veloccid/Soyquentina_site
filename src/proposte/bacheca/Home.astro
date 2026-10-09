@@ -1,0 +1,310 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Busto from '../../components/Busto.astro';
+import Foto from '../../components/Foto.astro';
+import { PRODOTTI, TIPI, prezzoFormattato } from '../../data/prodotti';
+import { SITO, linkWhatsApp } from '../../config';
+import { link } from '../../temi';
+
+const tema = 'bacheca';
+const pezzi = PRODOTTI.filter((p) => p.disponibile).slice(0, 7);
+const visita = linkWhatsApp(
+	'Ciao Quentina! Vorrei passare in laboratorio a vedere le ceramiche. Quando posso venire?',
+);
+
+// posizioni di partenza sulla bacheca (in % della larghezza/altezza) e rotazione
+const posti = [
+	{ x: 4, y: 6, r: -6 },
+	{ x: 27, y: 14, r: 4 },
+	{ x: 51, y: 4, r: -3 },
+	{ x: 75, y: 12, r: 7 },
+	{ x: 10, y: 52, r: 5 },
+	{ x: 58, y: 54, r: -7 },
+	{ x: 80, y: 56, r: 3 },
+];
+---
+
+<Layout tema={tema}>
+	<section class="contenitore testa">
+		<h1>La bacheca</h1>
+		<p>Sposta le foto come vuoi, apri quella che ti incuriosisce. Qui c'è solo una piccola selezione.</p>
+	</section>
+
+	<section class="bacheca-zona" aria-label="Bacheca dei pezzi in vendita">
+		<div class="bacheca" data-bacheca>
+			{
+				pezzi.map((p, i) => (
+					<a
+						class="polaroid"
+						href={link(tema, `/prodotti/${p.slug}`)}
+						style={`--x:${posti[i].x}%; --y:${posti[i].y}%; --r:${posti[i].r}deg`}
+						data-trascina
+					>
+						<span class="puntina" aria-hidden="true" />
+						<Foto src={p.foto[0]} alt={p.nome} />
+						<span class="didascalia">
+							<span>{p.nome}</span>
+							<strong>{prezzoFormattato(p.prezzo)}</strong>
+						</span>
+					</a>
+				))
+			}
+
+			<div class="biglietto avviso" style="--x:31%; --y:52%; --r:-2deg" data-trascina>
+				<span class="puntina" aria-hidden="true"></span>
+				<p class="biglietto-titolo">Solo una piccola selezione!</p>
+				<p>Tutte le altre ceramiche ti aspettano in laboratorio a {SITO.zona}, su appuntamento.</p>
+				<a class="bottone" href={visita} target="_blank" rel="noopener">Prenota su WhatsApp</a>
+			</div>
+
+			<div class="biglietto logo-biglietto" style="--x:42%; --y:30%; --r:8deg" data-trascina aria-hidden="true">
+				<Busto altezza={70} alt="" />
+			</div>
+		</div>
+		<p class="suggerimento" aria-hidden="true">trascina le foto</p>
+	</section>
+
+	<section class="contenitore blocco" aria-labelledby="titolo-anime">
+		<h2 id="titolo-anime">Due modi di fare ceramica</h2>
+		<div class="anime">
+			<a class="nota" href={link(tema, '/shop#modellate')}>
+				<h3>{TIPI.modellata.titolo}</h3>
+				<p>{TIPI.modellata.spiegazione}</p>
+			</a>
+			<a class="nota" href={link(tema, '/shop#illustrate')}>
+				<h3>{TIPI.illustrata.titolo}</h3>
+				<p>{TIPI.illustrata.spiegazione}</p>
+			</a>
+		</div>
+		<div class="bottoni centrati">
+			<a class="bottone" href={link(tema, '/shop')}>Vai allo shop</a>
+			<a class="bottone chiaro" href={link(tema, '/laboratori')}>Laboratori</a>
+			<a class="bottone chiaro" href={link(tema, '/commissioni')}>Commissioni</a>
+			<a class="bottone chiaro" href={link(tema, '/gift-card')}>Gift card</a>
+		</div>
+	</section>
+
+	<script is:inline>
+		(() => {
+			const bacheca = document.querySelector('[data-bacheca]');
+			if (!bacheca) return;
+			let z = 10;
+			bacheca.querySelectorAll('[data-trascina]').forEach((el) => {
+				let partenza = null;
+				let mosso = false;
+				el.addEventListener('pointerdown', (e) => {
+					if (e.button !== 0 || e.target.closest('.bottone')) return;
+					const r = bacheca.getBoundingClientRect();
+					const er = el.getBoundingClientRect();
+					partenza = { px: e.clientX, py: e.clientY, x: er.left - r.left, y: er.top - r.top, w: r.width, h: r.height };
+					mosso = false;
+					el.setPointerCapture(e.pointerId);
+					el.style.zIndex = String(++z);
+					el.classList.add('presa');
+				});
+				el.addEventListener('pointermove', (e) => {
+					if (!partenza) return;
+					const dx = e.clientX - partenza.px;
+					const dy = e.clientY - partenza.py;
+					if (Math.abs(dx) + Math.abs(dy) > 5) mosso = true;
+					if (!mosso) return;
+					const x = Math.min(Math.max(partenza.x + dx, -20), partenza.w - el.offsetWidth + 20);
+					const y = Math.min(Math.max(partenza.y + dy, -20), partenza.h - el.offsetHeight + 20);
+					el.style.left = `${(x / partenza.w) * 100}%`;
+					el.style.top = `${(y / partenza.h) * 100}%`;
+				});
+				const lascia = () => {
+					partenza = null;
+					el.classList.remove('presa');
+				};
+				el.addEventListener('pointerup', lascia);
+				el.addEventListener('pointercancel', lascia);
+				// se l'hai trascinata, il clic non apre il prodotto
+				el.addEventListener('click', (e) => {
+					if (mosso) {
+						e.preventDefault();
+						mosso = false;
+					}
+				});
+			});
+		})();
+	</script>
+</Layout>
+
+<style>
+	.testa {
+		padding-top: clamp(24px, 4vw, 48px);
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+	.testa p {
+		font-size: 1.2rem;
+		max-width: 48ch;
+	}
+	.bacheca-zona {
+		max-width: 1320px;
+		margin: 32px auto 0;
+		padding: 0 var(--margine);
+		position: relative;
+	}
+	.bacheca {
+		position: relative;
+		height: clamp(760px, 72vw, 920px);
+		background-color: var(--rosa);
+		background-image: radial-gradient(rgba(0, 0, 0, 0.09) 1.2px, transparent 1.3px);
+		background-size: 22px 22px;
+		border: var(--linea);
+		border-radius: 28px;
+		overflow: hidden;
+	}
+	[data-trascina] {
+		position: absolute;
+		left: var(--x);
+		top: var(--y);
+		transform: rotate(var(--r));
+		touch-action: none;
+		user-select: none;
+		cursor: grab;
+		transition: transform 0.25s ease, box-shadow 0.25s ease;
+	}
+	[data-trascina]:global(.presa) {
+		cursor: grabbing;
+		transform: rotate(0deg) scale(1.05);
+		box-shadow: 0 24px 40px rgba(0, 0, 0, 0.18);
+	}
+	.polaroid {
+		width: clamp(170px, 17vw, 220px);
+		background: var(--bianco);
+		border: var(--linea);
+		padding: 12px 12px 14px;
+		text-decoration: none;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+	}
+	.polaroid :global(.foto) {
+		border-radius: 0;
+		aspect-ratio: 1;
+		pointer-events: none;
+	}
+	.polaroid :global(img) {
+		-webkit-user-drag: none;
+	}
+	.didascalia {
+		display: flex;
+		justify-content: space-between;
+		gap: 8px;
+		font-size: 0.92rem;
+	}
+	.didascalia strong {
+		font-weight: 400;
+	}
+	.puntina {
+		position: absolute;
+		top: -9px;
+		left: 50%;
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		background: var(--nero);
+		transform: translateX(-50%);
+		box-shadow: inset -3px -3px 0 rgba(255, 255, 255, 0.25);
+	}
+	.biglietto {
+		background: var(--bianco);
+		border: var(--linea);
+		padding: 22px 20px 20px;
+		box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+	}
+	.avviso {
+		width: clamp(220px, 22vw, 280px);
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+	.biglietto-titolo {
+		font-size: 1.25rem;
+		font-weight: 400;
+		line-height: 1.2;
+	}
+	.avviso .bottone {
+		min-height: 40px;
+		padding: 0 18px;
+		align-self: flex-start;
+		cursor: pointer;
+	}
+	.logo-biglietto {
+		border-radius: 50%;
+		width: 110px;
+		height: 110px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 0;
+	}
+	.suggerimento {
+		text-align: center;
+		margin-top: 12px;
+		color: var(--nero-tenue);
+		font-size: 0.95rem;
+	}
+
+	.blocco {
+		margin-top: clamp(72px, 10vw, 120px);
+	}
+	.anime {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 28px;
+		margin-top: 32px;
+	}
+	.nota {
+		background: var(--bianco);
+		border: var(--linea);
+		padding: 32px 28px;
+		text-decoration: none;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+		transform: rotate(-1deg);
+		box-shadow: 6px 6px 0 var(--rosa);
+		transition: transform 0.3s;
+	}
+	.nota + .nota {
+		transform: rotate(1.4deg);
+	}
+	.nota:hover {
+		transform: rotate(0) translateY(-4px);
+	}
+	.nota h3 {
+		font-size: clamp(1.6rem, 3vw, 2.2rem);
+	}
+	.centrati {
+		justify-content: center;
+		margin-top: 48px;
+	}
+
+	@media (max-width: 760px) {
+		.bacheca {
+			height: 1150px;
+		}
+		.polaroid {
+			width: 150px;
+			padding: 8px 8px 10px;
+		}
+		.polaroid:nth-of-type(1) { left: 4%; top: 2%; }
+		.polaroid:nth-of-type(2) { left: 50%; top: 5%; }
+		.polaroid:nth-of-type(3) { left: 6%; top: 21%; }
+		.polaroid:nth-of-type(4) { left: 52%; top: 24%; }
+		.polaroid:nth-of-type(5) { left: 3%; top: 63%; }
+		.polaroid:nth-of-type(6) { left: 50%; top: 66%; }
+		.polaroid:nth-of-type(7) { left: 26%; top: 82%; }
+		.avviso { left: 12%; top: 42%; width: 76%; }
+		.logo-biglietto { left: 66%; top: 46%; display: none; }
+		.anime {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

@@ -6,12 +6,15 @@ import Vetrina from '../../proposte/vetrina/Home.astro';
 import Rosa from '../../proposte/rosa/Home.astro';
 import Racconto from '../../proposte/racconto/Home.astro';
 import Morbida from '../../proposte/morbida/Home.astro';
+import Bacheca from '../../proposte/bacheca/Home.astro';
+import Laboratorio from '../../proposte/laboratorio/Home.astro';
+import Flusso from '../../proposte/flusso/Home.astro';
 
 export function getStaticPaths() {
 	return percorsiTemi();
 }
 const { tema } = Astro.params;
-const Home = { essenziale: Essenziale, wow: Wow, vetrina: Vetrina, rosa: Rosa, racconto: Racconto, morbida: Morbida }[tema as string]!;
+const Home = { essenziale: Essenziale, wow: Wow, vetrina: Vetrina, rosa: Rosa, racconto: Racconto, morbida: Morbida, bacheca: Bacheca, laboratorio: Laboratorio, flusso: Flusso }[tema as string]!;
 ---
 
 <Home />
