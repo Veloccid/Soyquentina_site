@@ -40,6 +40,11 @@ import '@fontsource/figtree/400.css';
 					<span style={`--i:${i}`}>{c === ' ' ? ' ' : c}</span>
 				))}
 			</p>
+
+			<p class="insta">
+				Nel frattempo vai su Instagram:{' '}
+				<a href="https://www.instagram.com/soyquentina/" target="_blank" rel="noopener">@soyquentina</a>
+			</p>
 		</main>
 
 		<style is:global>
@@ -154,6 +159,17 @@ import '@fontsource/figtree/400.css';
 				animation: onda 2.6s ease-in-out infinite;
 				animation-delay: calc(var(--i) * 0.07s);
 			}
+
+			.insta { margin: 18px 0 0; font-size: 1.05rem; }
+			.insta a {
+				color: var(--nero);
+				font-weight: 400;
+				text-decoration: underline;
+				text-decoration-color: var(--blu);
+				text-decoration-thickness: 2px;
+				text-underline-offset: 4px;
+			}
+			.insta a:hover { color: var(--blu); }
 
 			@keyframes entra {
 				from { opacity: 0; transform: translateY(-12px); }
