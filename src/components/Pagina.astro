@@ -3,16 +3,15 @@
 import Layout from '../layouts/Layout.astro';
 
 interface Props {
-	tema: string;
 	titolo: string;
 	descrizione?: string;
 	intro?: string;
 	daCompletare?: boolean; // mostra un avviso che il testo è provvisorio
 }
-const { tema, titolo, descrizione, intro, daCompletare = false } = Astro.props;
+const { titolo, descrizione, intro, daCompletare = false } = Astro.props;
 ---
 
-<Layout tema={tema} titolo={titolo} descrizione={descrizione}>
+<Layout titolo={titolo} descrizione={descrizione}>
 	<div class="contenitore pagina">
 		<header class="pagina-testa">
 			<h1>{titolo}</h1>

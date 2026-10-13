@@ -1,30 +1,28 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Foto from '../../components/Foto.astro';
-import SchedaProdotto from '../../components/SchedaProdotto.astro';
-import AvvisoSelezione from '../../components/AvvisoSelezione.astro';
-import { PRODOTTI, TIPI, prezzoFormattato, type Prodotto } from '../../data/prodotti';
-import { linkWhatsApp } from '../../config';
-import { link } from '../../temi';
+import Layout from '../layouts/Layout.astro';
+import Foto from './Foto.astro';
+import SchedaProdotto from './SchedaProdotto.astro';
+import AvvisoSelezione from './AvvisoSelezione.astro';
+import { PRODOTTI, TIPI, prezzoFormattato, type Prodotto } from '../data/prodotti';
+import { linkWhatsApp } from '../config';
 
 interface Props {
-	tema: string;
 	prodotto: Prodotto;
 }
-const { tema, prodotto } = Astro.props;
+const { prodotto } = Astro.props;
 const altri = PRODOTTI.filter((p) => p.slug !== prodotto.slug && p.disponibile).slice(0, 4);
 const chiedi = linkWhatsApp(`Ciao Quentina! Mi interessa "${prodotto.nome}". È ancora disponibile?`);
 ---
 
-<Layout tema={tema} titolo={prodotto.nome} descrizione={prodotto.descrizione} immagine={prodotto.foto[0]}>
+<Layout titolo={prodotto.nome} descrizione={prodotto.descrizione} immagine={prodotto.foto[0]}>
 	<div class="contenitore">
-		<a class="indietro" href={link(tema, `/shop#${prodotto.tipo === 'modellata' ? 'modellate' : 'illustrate'}`)}>
+		<a class="indietro" href={`/shop#${prodotto.tipo === 'modellata' ? 'modellate' : 'illustrate'}`}>
 			Torna allo shop
 		</a>
 	</div>
 
 	<article class="contenitore prodotto">
-		<div class="galleria" data-rivela>
+		<div class="galleria">
 			<Foto src={prodotto.foto[0]} alt={prodotto.nome} grande />
 			{
 				prodotto.foto.length > 1 && (
@@ -37,7 +35,7 @@ const chiedi = linkWhatsApp(`Ciao Quentina! Mi interessa "${prodotto.nome}". È 
 			}
 		</div>
 
-		<div class="dettagli" data-rivela>
+		<div class="dettagli">
 			<p class="tipo">{TIPI[prodotto.tipo].etichetta}</p>
 			<h1>{prodotto.nome}</h1>
 			<p class="prezzo">{prezzoFormattato(prodotto.prezzo)}</p>
@@ -78,10 +76,10 @@ const chiedi = linkWhatsApp(`Ciao Quentina! Mi interessa "${prodotto.nome}". È 
 	{
 		altri.length > 0 && (
 			<section class="contenitore blocco" aria-labelledby="titolo-altri">
-				<h2 id="titolo-altri" data-rivela>Potrebbero piacerti</h2>
+				<h2 id="titolo-altri">Potrebbero piacerti</h2>
 				<div class="griglia">
 					{altri.map((p) => (
-						<SchedaProdotto prodotto={p} tema={tema} />
+						<SchedaProdotto prodotto={p} />
 					))}
 				</div>
 			</section>
@@ -129,10 +127,6 @@ const chiedi = linkWhatsApp(`Ciao Quentina! Mi interessa "${prodotto.nome}". È 
 		padding: 4px 14px;
 		font-size: 0.92rem;
 		font-weight: 400;
-	}
-	:global([data-tema='rosa']) .tipo,
-	:global([data-tema='morbida']) .tipo {
-		border: var(--linea);
 	}
 	.prezzo {
 		font-size: 1.6rem;

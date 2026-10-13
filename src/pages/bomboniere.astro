@@ -1,0 +1,342 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Parete from '../components/vetrina/Parete.astro';
+import Sagoma from '../components/vetrina/Sagoma.astro';
+import { SITO, linkWhatsApp } from '../config';
+
+// Esempi di occasioni (segnaposto: sostituire con foto e descrizioni vere)
+const occasioni = [
+	{ nome: 'Matrimonio', forma: 0, altezza: 170, foto: '' },
+	{ nome: 'Battesimo', forma: 5, altezza: 120, foto: '' },
+	{ nome: 'Comunione e cresima', forma: 1, altezza: 140, foto: '' },
+	{ nome: 'Laurea e feste', forma: 3, altezza: 180, foto: '' },
+];
+
+const chiedi = (occasione?: string) =>
+	linkWhatsApp(
+		`Ciao Quentina! Vorrei un preventivo per delle bomboniere${occasione ? ` (${occasione.toLowerCase()})` : ''}.\nData dell'evento: \nQuantità: \nIdee o colori: `,
+	);
+
+const passi = [
+	{ titolo: 'Data e quantità', testo: "Mi scrivi tipo di evento, data e numero di invitati. Più presto mi contatti, meglio è." },
+	{ titolo: 'Scegliamo il modello', testo: 'Forma, colori, illustrazione e personalizzazione: nomi, iniziali o data.' },
+	{ titolo: 'Il campione', testo: 'Preparo un primo pezzo da vedere dal vivo o in foto. Lo approvi prima della produzione.' },
+	{ titolo: 'Consegna', testo: 'Ritiro in laboratorio a Garbatella oppure spedizione, imballate con cura e pronte da regalare.' },
+];
+
+// Informazioni pratiche: da completare con i dati di Quentina
+const info = [
+	{ voce: 'Quantità minima', valore: 'Da definire' },
+	{ voce: 'Quanto prima ordinare', valore: 'Da definire (es. almeno 2–3 mesi prima)' },
+	{ voce: 'Prezzo indicativo', valore: 'Da definire, a pezzo' },
+	{ voce: 'Personalizzazioni', valore: 'Nomi, iniziali, data, colori (da confermare)' },
+	{ voce: 'Confezione e bigliettino', valore: 'Da definire' },
+];
+---
+
+<Layout
+	titolo="Bomboniere e cerimonie"
+	descrizione="Bomboniere in ceramica fatte a mano per matrimoni, battesimi, comunioni e lauree. Homelab a Garbatella, Roma."
+>
+	<section class="contenitore apertura">
+		<h1>Bomboniere e cerimonie</h1>
+		<p class="sottotitolo">
+			Piccole ceramiche fatte a mano da regalare ai tuoi ospiti: tutte simili ma ognuna un po' diversa,
+			come ogni cosa fatta a mano.
+		</p>
+		<p class="provvisorio">Testo e informazioni provvisori, da completare.</p>
+	</section>
+
+	<div class="contenitore">
+		<Parete etichetta="Alcune idee per ogni occasione">
+			<div class="mensola">
+				<ul class="occasioni">
+					{
+						occasioni.map((o) => (
+							<li style={`--h:${o.altezza}px`}>
+								<a class="occasione" href={chiedi(o.nome)} target="_blank" rel="noopener">
+									<span class="figura">
+										<Sagoma indice={o.forma} foto={o.foto || undefined} alt={`Bomboniera per ${o.nome.toLowerCase()}`} />
+									</span>
+									<span class="cartellino">{o.nome}</span>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+				<div class="asse" aria-hidden="true"></div>
+			</div>
+		</Parete>
+		<div class="sotto-parete">
+			<p>Tocca un'occasione per chiedere un preventivo: il messaggio su WhatsApp è già pronto da completare.</p>
+			<a class="bottone" href={chiedi()} target="_blank" rel="noopener">Chiedi un preventivo</a>
+		</div>
+	</div>
+
+	<section class="contenitore blocco" aria-labelledby="titolo-passi">
+		<h2 id="titolo-passi">Come funziona</h2>
+		<ol class="passi">
+			{
+				passi.map((p) => (
+					<li>
+						<h3>{p.titolo}</h3>
+						<p>{p.testo}</p>
+					</li>
+				))
+			}
+		</ol>
+	</section>
+
+	<section class="contenitore blocco pratiche" aria-labelledby="titolo-info">
+		<div>
+			<h2 id="titolo-info">Da sapere</h2>
+			<p class="nota">
+				Ogni bomboniera è fatta a mano, quindi forme e colori possono variare leggermente da un pezzo
+				all'altro. È proprio questo che le rende speciali.
+			</p>
+		</div>
+		<dl>
+			{
+				info.map((r) => (
+					<div>
+						<dt>{r.voce}</dt>
+						<dd>{r.valore}</dd>
+					</div>
+				))
+			}
+		</dl>
+	</section>
+
+	<section class="contenitore blocco">
+		<div class="chiusura">
+			<div>
+				<h2>Hai una data in mente?</h2>
+				<p>Scrivimi: ti rispondo con idee, tempi e preventivo. Puoi anche passare in laboratorio a {SITO.zona} a vedere i campioni, su appuntamento.</p>
+			</div>
+			<div class="bottoni">
+				<a class="bottone" href={chiedi()} target="_blank" rel="noopener">Chiedi un preventivo su WhatsApp</a>
+				<a class="bottone chiaro" href="/commissioni">Cerchi un pezzo unico? Commissioni</a>
+			</div>
+		</div>
+	</section>
+</Layout>
+
+<style>
+	.apertura {
+		padding-top: clamp(24px, 4vw, 48px);
+		padding-bottom: 32px;
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+	}
+	.sottotitolo {
+		font-size: 1.2rem;
+		max-width: 52ch;
+	}
+	.provvisorio {
+		align-self: flex-start;
+		background: var(--rosa);
+		border-radius: 999px;
+		padding: 4px 14px;
+		font-size: 0.9rem;
+	}
+
+	/* mensola delle occasioni (stesso stile della vetrina) */
+	.occasioni {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		align-items: flex-end;
+		justify-content: space-around;
+		gap: clamp(8px, 2vw, 28px);
+		min-height: 220px;
+	}
+	.occasioni li {
+		flex: 1 1 0;
+		max-width: 170px;
+		display: flex;
+		justify-content: center;
+	}
+	.occasione {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		text-decoration: none;
+	}
+	.figura {
+		display: block;
+		width: 100%;
+		height: var(--h);
+		max-height: 30vw;
+		transform-origin: 50% 100%;
+		transition: transform 0.35s cubic-bezier(0.2, 1.4, 0.4, 1);
+	}
+	.occasione:hover .figura,
+	.occasione:focus-visible .figura {
+		transform: translateY(-10px) rotate(-2deg);
+	}
+	.cartellino {
+		position: absolute;
+		top: calc(100% + 18px);
+		left: 50%;
+		transform: translateX(-50%) rotate(-3deg);
+		background: var(--bianco);
+		border: var(--linea);
+		border-radius: 8px;
+		padding: 6px 10px;
+		font-size: 0.85rem;
+		font-weight: 400;
+		white-space: nowrap;
+		z-index: 2;
+	}
+	.cartellino::before {
+		content: '';
+		position: absolute;
+		left: 50%;
+		bottom: 100%;
+		width: 1.5px;
+		height: 16px;
+		background: var(--nero);
+	}
+	.asse {
+		height: 10px;
+		background: var(--nero);
+		border-radius: 3px;
+		margin: 0 calc(clamp(8px, 2vw, 24px) * -1);
+	}
+	.mensola {
+		padding: 0 clamp(8px, 2vw, 24px) 40px;
+	}
+	.sotto-parete {
+		border: var(--linea);
+		border-top: 0;
+		border-radius: 0 0 32px 32px;
+		padding: 24px 28px;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 16px 32px;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.sotto-parete p {
+		max-width: 56ch;
+	}
+
+	.blocco {
+		margin-top: clamp(72px, 10vw, 120px);
+	}
+	.blocco h2 {
+		font-size: clamp(1.8rem, 3.6vw, 2.6rem);
+	}
+	.passi {
+		list-style: none;
+		counter-reset: passo;
+		padding: 0;
+		margin: 28px 0 0;
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 24px;
+	}
+	.passi li {
+		counter-increment: passo;
+		border-top: var(--linea);
+		padding-top: 18px;
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
+	}
+	.passi li::before {
+		content: counter(passo);
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		background: var(--rosa);
+		font-weight: 400;
+	}
+
+	.pratiche {
+		display: grid;
+		grid-template-columns: 1fr 1.2fr;
+		gap: 32px 56px;
+		align-items: start;
+	}
+	.nota {
+		margin-top: 16px;
+		max-width: 44ch;
+	}
+	dl {
+		margin: 0;
+		border-top: var(--linea);
+	}
+	dl div {
+		display: grid;
+		grid-template-columns: 200px 1fr;
+		gap: 12px;
+		padding: 14px 0;
+		border-bottom: var(--linea);
+	}
+	dt {
+		font-weight: 400;
+	}
+	dd {
+		margin: 0;
+	}
+
+	.chiusura {
+		background: var(--rosa);
+		border-radius: 32px;
+		padding: clamp(28px, 5vw, 56px);
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 24px 48px;
+	}
+	.chiusura > div:first-child {
+		max-width: 52ch;
+		display: flex;
+		flex-direction: column;
+		gap: 12px;
+	}
+
+	@media (max-width: 900px) {
+		.passi {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+	@media (max-width: 760px) {
+		.pratiche {
+			grid-template-columns: 1fr;
+		}
+		dl div {
+			grid-template-columns: 1fr;
+			gap: 2px;
+		}
+		.occasioni {
+			min-height: 140px;
+		}
+		.figura {
+			max-height: 90px;
+		}
+		.cartellino {
+			font-size: 0.72rem;
+			padding: 4px 6px;
+			white-space: normal;
+			width: max-content;
+			max-width: 78px;
+			text-align: center;
+			line-height: 1.2;
+		}
+	}
+	@media (max-width: 520px) {
+		.passi {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

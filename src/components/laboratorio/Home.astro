@@ -4,9 +4,7 @@ import Sagoma from '../vetrina/Sagoma.astro';
 import Pannello from '../vetrina/Pannello.astro';
 import { PRODOTTI, TIPI, prezzoFormattato } from '../../data/prodotti';
 import { SITO, linkWhatsApp } from '../../config';
-import { link } from '../../temi';
 
-const tema = 'laboratorio';
 const pezzi = PRODOTTI.filter((p) => p.disponibile).slice(0, 7);
 const visita = linkWhatsApp(
 	'Ciao Quentina! Vorrei passare in laboratorio a vedere le ceramiche. Quando posso venire?',
@@ -30,17 +28,18 @@ const appoggi = [
 
 // i posti del laboratorio, cliccabili
 const posti = [
-	{ id: 'porta', nome: 'La porta', testo: 'Prenota una visita', href: visita, esterno: true, x: 150, y: 330 },
-	{ id: 'insegna', nome: "L'insegna", testo: 'Chi sono', href: link(tema, '/chi-sono'), x: 720, y: 250 },
-	{ id: 'mensole', nome: 'Le mensole', testo: 'Tutto lo shop', href: link(tema, '/shop'), x: 1200, y: 150 },
-	{ id: 'tavolo', nome: 'Il tavolo', testo: 'Commissioni', href: link(tema, '/commissioni'), x: 1800, y: 700 },
-	{ id: 'forno', nome: 'Il forno', testo: 'Laboratori', href: link(tema, '/laboratori'), x: 2240, y: 300 },
+	{ id: 'porta', nome: 'La porta', testo: 'Prenota una visita', href: visita, esterno: true, x: 160, y: 300 },
+	{ id: 'insegna', nome: "L'insegna", testo: 'Chi sono', href: '/chi-sono', x: 720, y: 420 },
+	{ id: 'mensole', nome: 'Le mensole', testo: 'Tutto lo shop', href: '/shop', x: 1200, y: 150 },
+	{ id: 'bomboniere', nome: 'Le bomboniere', testo: 'Per le cerimonie', href: '/bomboniere', x: 1500, y: 790 },
+	{ id: 'tavolo', nome: 'Il tavolo', testo: 'Commissioni', href: '/commissioni', x: 1800, y: 700 },
+	{ id: 'forno', nome: 'Il forno', testo: 'Laboratori', href: '/laboratori', x: 2240, y: 300 },
 ];
 ---
 
-<Layout tema={tema}>
+<Layout>
 	<section class="contenitore testa">
-		<h1>Benvenuta in laboratorio</h1>
+		<h1>Entra nel mio laboratorio</h1>
 		<p>
 			Questo è il mio homelab a {SITO.zona}. Scorri per girare la stanza: tocca i pezzi per scoprirli,
 			tocca i posti per andare altrove.
@@ -83,6 +82,17 @@ const posti = [
 						<rect x="880" y="562" width="640" height="14" class="nero" />
 						<path d="M920 366 l 30 40 M1480 366 l -30 40 M920 576 l 30 40 M1480 576 l -30 40" class="tratto" />
 
+						<!-- cesta delle bomboniere -->
+						<g class="cesta">
+							<path d="M1448 642 q 12 -26 30 -2 q 10 -30 30 -4 q 14 -24 30 0 q 12 -22 26 2" class="bianco tratto" />
+							<circle cx="1478" cy="632" r="14" class="bianco tratto" />
+							<circle cx="1512" cy="626" r="16" class="rosa tratto" />
+							<circle cx="1546" cy="632" r="14" class="bianco tratto" />
+							<path d="M1436 646 h 140 l -14 54 h -112 z" class="rosa tratto" />
+							<path d="M1446 666 h 120 M1452 686 h 108" class="tratto" />
+							<path d="M1470 646 c 0 -40 72 -40 72 0" class="tratto" />
+						</g>
+
 						<!-- tavolo di lavoro -->
 						<rect x="1580" y="602" width="520" height="22" class="nero" />
 						<rect x="1610" y="624" width="16" height="220" class="nero" />
@@ -122,7 +132,7 @@ const posti = [
 									data-tipo={TIPI[p.tipo].etichetta}
 									data-descrizione={p.descrizione}
 									data-misure={p.dimensioni}
-									data-link={link(tema, `/prodotti/${p.slug}`)}
+									data-link={`/prodotti/${p.slug}`}
 									data-whatsapp={linkWhatsApp(`Ciao Quentina! Mi interessa "${p.nome}". È ancora disponibile?`)}
 									data-unico={p.pezzoUnico ? '1' : '0'}
 									aria-label={`${p.nome}, ${prezzoFormattato(p.prezzo)}. Apri il dettaglio`}
@@ -165,13 +175,18 @@ const posti = [
 				Le mensole del sito sono piccole: dal vivo ce ne sono molte di più. Vieni a trovarmi in
 				laboratorio su appuntamento.
 			</p>
-			<a class="bottone" href={visita} target="_blank" rel="noopener">Prenota una visita su WhatsApp</a>
+			<a class="bottone" href={visita} target="_blank" rel="noopener">Prenota una visita</a>
+		</div>
+		<div class="riquadro">
+			<h2>Bomboniere e cerimonie</h2>
+			<p>Piccole ceramiche fatte a mano da regalare agli ospiti di matrimoni, battesimi, comunioni e lauree.</p>
+			<a class="bottone chiaro" href="/bomboniere">Scopri le bomboniere</a>
 		</div>
 		<div class="riquadro">
 			<h2>Due modi di fare ceramica</h2>
 			<p><strong>{TIPI.modellata.titolo}:</strong> {TIPI.modellata.spiegazione}</p>
 			<p><strong>{TIPI.illustrata.titolo}:</strong> {TIPI.illustrata.spiegazione}</p>
-			<a class="bottone chiaro" href={link(tema, '/shop')}>Vai allo shop</a>
+			<a class="bottone chiaro" href={'/shop'}>Vai allo shop</a>
 		</div>
 	</section>
 
@@ -466,7 +481,7 @@ const posti = [
 	.sotto {
 		margin-top: clamp(48px, 8vw, 96px);
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: repeat(3, 1fr);
 		gap: 24px;
 	}
 	.riquadro {
@@ -488,6 +503,11 @@ const posti = [
 		font-weight: 400;
 	}
 
+	@media (max-width: 1000px) {
+		.sotto {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
 	@media (max-width: 760px) {
 		.giro-fisso {
 			position: static;

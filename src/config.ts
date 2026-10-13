@@ -27,6 +27,7 @@ export function linkWhatsApp(messaggio: string): string {
 
 export const MENU = [
 	{ href: '/shop', testo: 'Shop' },
+	{ href: '/bomboniere', testo: 'Bomboniere' },
 	{ href: '/laboratori', testo: 'Laboratori' },
 	{ href: '/commissioni', testo: 'Commissioni' },
 	{ href: '/gift-card', testo: 'Gift card' },
