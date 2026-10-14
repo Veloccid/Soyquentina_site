@@ -52,6 +52,7 @@ const esposti = PRODOTTI.filter((p) => p.disponibile).slice(0, 6);
 	</div>
 
 	<section class="contenitore blocco altro" aria-label="Altro">
+		<a href={link(tema, '/bomboniere')}><h3>Bomboniere</h3><p>Piccoli pezzi su misura per matrimoni, battesimi e cerimonie.</p></a>
 		<a href={link(tema, '/laboratori')}><h3>Laboratori</h3><p>Impara a modellare e decorare nel mio homelab a {SITO.zona}.</p></a>
 		<a href={link(tema, '/commissioni')}><h3>Commissioni</h3><p>Un pezzo pensato per te.</p></a>
 		<a href={link(tema, '/gift-card')}><h3>Gift card</h3><p>Regala una ceramica o un laboratorio.</p></a>
@@ -133,7 +134,7 @@ const esposti = PRODOTTI.filter((p) => p.disponibile).slice(0, 6);
 	}
 	.altro {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(4, 1fr);
 		border-top: var(--linea);
 	}
 	.altro a {
@@ -150,6 +151,18 @@ const esposti = PRODOTTI.filter((p) => p.disponibile).slice(0, 6);
 	.altro a:hover h3 {
 		text-decoration: underline;
 		text-underline-offset: 6px;
+	}
+	@media (max-width: 1000px) {
+		.altro {
+			grid-template-columns: 1fr 1fr;
+		}
+		.altro a:nth-child(3) {
+			border-left: 0;
+			padding-left: 0;
+		}
+		.altro a:nth-child(n + 3) {
+			border-top: var(--linea);
+		}
 	}
 	@media (max-width: 760px) {
 		.coppia,

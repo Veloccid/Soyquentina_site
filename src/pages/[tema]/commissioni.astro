@@ -1,7 +1,7 @@
 ---
 import Pagina from '../../components/Pagina.astro';
 import { linkWhatsApp } from '../../config';
-import { percorsiTemi } from '../../temi';
+import { percorsiTemi, link } from '../../temi';
 
 export function getStaticPaths() {
 	return percorsiTemi();
@@ -21,7 +21,7 @@ const passi = [
 <Pagina
 	tema={tema}
 	titolo="Commissioni"
-	intro="Un pezzo pensato per te: per la tua casa, un regalo, un matrimonio o un'occasione speciale."
+	intro="Un pezzo unico pensato per te: per la tua casa, un regalo o un'occasione speciale."
 	descrizione="Ceramiche su commissione, modellate e illustrate a mano da SoyQuentina."
 >
 	<h2>Come funziona</h2>
@@ -38,6 +38,11 @@ const passi = [
 	<div class="bottoni azioni">
 		<a class="bottone" href={scrivi} target="_blank" rel="noopener">Raccontami la tua idea</a>
 	</div>
+
+	<aside class="rimando">
+		<p>Stai organizzando un matrimonio, un battesimo o una comunione? Per i pezzi da regalare agli ospiti c'è una pagina apposta.</p>
+		<a class="bottone chiaro" href={link(tema, '/bomboniere')}>Guarda le bomboniere</a>
+	</aside>
 </Pagina>
 
 <style>
@@ -73,6 +78,20 @@ const passi = [
 	}
 	.azioni {
 		margin-top: 40px;
+	}
+	.rimando {
+		margin-top: 64px;
+		background: var(--superficie);
+		border-radius: 24px;
+		padding: 24px 28px;
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px 32px;
+	}
+	.rimando p {
+		max-width: 56ch;
 	}
 	@media (max-width: 900px) {
 		.passi {
